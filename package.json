@@ -8,10 +8,11 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "body-parser": "latest",
     "consolidate": "latest",
     "express": "latest",
-    "mustache": "latest",
-    "body-parser": "latest"
+    "instagram-node": "^0.5.8",
+    "mustache": "latest"
   },
   "repository": {
     "type": "git",
