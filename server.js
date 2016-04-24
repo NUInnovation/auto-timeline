@@ -100,7 +100,8 @@ app.get('/test', function(req, res) {
 
 app.get('/create', function(req, res) {
   // This is the endpoint an AJAX call will hit to get data.
-  compileData("CHI2016", function(resultsJSON) {
+  var query = req.query.query;
+  compileData(query, function(resultsJSON) {
     res.send(resultsJSON)
   });
 });
