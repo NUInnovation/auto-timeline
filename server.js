@@ -80,21 +80,17 @@ function getInstagramData(query, callback) {
 // each of the different platform APIs and compiling
 // the data into a coherent response to send back to
 // the front-end.
-function compileData(query) {
+function compileData(query, callback) {
   // getTwitterData(query)
-  console.log('compiling data')
   getInstagramData(query, function(igMedia) {
     finalJSON = {
       "events": igMedia
     }
-
-    console.log(JSON.stringify(finalJSON))
+    callback(finalJSON)
   });
 }
 
 app.get('/', function(req, res) {
-  console.log("Got main endpoint");
-  compileData("aera16");
 	res.render('home.html');
 });
 
@@ -103,9 +99,10 @@ app.get('/test', function(req, res) {
 });
 
 app.get('/create', function(req, res) {
-  // This is the endpoint an AJAX call will hit to
-  // get data.
-  //compileData("aera16");
+  // This is the endpoint an AJAX call will hit to get data.
+  compileData("CHI2016", function(resultsJSON) {
+    res.send(resultsJSON)
+  });
 });
 
 /// catch 404 and forward to error handler
