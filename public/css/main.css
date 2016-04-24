@@ -1,7 +1,7 @@
 body{
-  font-family: 'Lora', serif;
+  font-family: 'EB Garamond', serif;
   margin: 0px;
-  color: #eee;
+  color: #fff;
 }
 
 .at-wrapper{
@@ -13,29 +13,32 @@ body{
 
 .at-back{
   height: 640px;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .at-header{
   width: 100%;
-  font-size: 5em;
+  font-size: 4em;
   text-align: center;
   padding-top: 150px;
-  padding-bottom: 40px;
-  text-shadow:5px 2px 6px #000;
+  padding-bottom: 10px;
+  text-shadow:1px 1px 4px #444;
 
 }
 
 .search-box{
-  width: 300px;
+  font-family: 'Roboto', sans-serif;
+  width: 420px;
   margin: 0 auto;
 }
 
-.search-box span{
-  text-shadow:5px 2px 3px #000;
+.search-box p{
+  line-height: 1.8em;
+  color: #fff;
+  text-shadow:1px 1px 4px #444;
   display: block;
-  font-size: 1.6em;
-  margin-bottom: 20px;
+  font-size: 1.3em;
+  margin-bottom: 30px;
 }
 
 .input-field input{
@@ -47,16 +50,66 @@ body{
      box-shadow: 0 1px 0 0 rgba(255, 150, 0, 0.6) !important;
 }
 
-.search-btn .btn:hover{
-  background-color: rgba(255, 150, 0, 0.6);
+#at-input{
+  color:#000;
+  background-color: #fff;
+  padding-left: 10px;
+  border-radius: 3px;
+  box-shadow: none;
+  outline: none;
+  border: 1px #ddd solid;
+  width: 315px;
+  height: 40px;
 }
 
-.search-btn .btn{
-  font-size: 1.5em;
-  line-height: 43px;
-  width: 120px;
-  height: 45px;
-  border: 1px #fff solid;
-  margin-top: 10px;
-  background-color: rgba(0, 0, 0, 0.3);
+#at-input:focus{
+  border-color: #FFb000;
+
+}
+
+#at-btn{
+  font-size: 1em;
+  border-radius: 3px;
+  border: #FFBF00 1px solid;
+  outline: none;
+  color: #fff;
+  padding: 9px 15px;
+  float: right;
+  background-color: #FFBF00;
+  transition: background-color .5s, color .5s ease;
+}
+
+#at-btn:hover{
+  color: #fff;
+  background-color: #FFb000;
+  border-color: #ffb000;
+}
+
+.ex-wrapper{
+  overflow: auto;
+  background-color: #fefefe;
+}
+
+.at-example{
+  overflow: auto;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.at-exheader{
+  margin-bottom: 20px;
+  margin-top: 30px;
+  color: #333;
+  font-size: 2.5em;
+}
+
+.card-image img{
+  height: auto;
+  background-size: contain;
+}
+
+.at-exwrapper{
+  margin: 10px auto;
+  width: 1100px;
+  color: #333;
 }
