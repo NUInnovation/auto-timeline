@@ -12,6 +12,7 @@
     "consolidate": "latest",
     "express": "latest",
     "instagram-node": "^0.5.8",
+    "moment": "^2.13.0",
     "mustache": "latest"
   },
   "repository": {

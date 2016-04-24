@@ -4,6 +4,7 @@ var mustache = require('mustache');
 var bodyParser = require('body-parser');
 var Twitter = require('twitter');
 var ig = require('instagram-node').instagram();
+var moment = require('moment');
 
 var app = express();
 
@@ -30,14 +31,45 @@ ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
 function getTwitterData(query) {
   client.get('search/tweets', {q: query}, function(error, tweets, response){
-     console.log(tweets);
+     console.log(tweets[0]);
   });
 }
 
 function getInstagramData(query) {
   console.log("Attempting to call instagram")
+  processeData = []
   ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
-    console.log(medias)
+    mediaObjects = []
+
+    for (var i = 0; i <= medias.length; i++) {
+      media = medias[i];
+      instagramDate = moment(new Date(media.created_time * 1000));
+
+      mediaObject = {
+        "media": {
+            "url": media.images.standard_resolution.url,
+            "caption": media.internalTag,
+            "credit": "@" + media.user.username,
+            "thumb": media.images.standard_resolution.url
+          },
+          "start_date": {
+            "month": instagramDate.format("MM"),
+            "day": instagramDate.format("DD"),
+            "year": instagramDate.format("YYYY"),
+            "hour": instagramDate.format("HH"),
+            "minute": instagramDate.format("mm"),
+            "second": instagramDate.format("ss")
+          },
+          "text": {
+            "headline": "",
+            "text": "<p>" + media.caption.text + "</p>"
+          }
+      }
+
+      mediaObjects.push(mediaObject);
+    }
+
+    return(mediaObjects)
   });
 }
 // This will be the central function for hitting
@@ -49,7 +81,6 @@ function compileData(query) {
   console.log('compiling data')
   getInstagramData(query)
 }
-
 
 app.get('/', function(req, res) {
   console.log("Got main endpoint");
