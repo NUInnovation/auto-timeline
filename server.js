@@ -30,9 +30,39 @@ var client = new Twitter({
 ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
 //This function gathers and process media from Twitter
-function getTwitterData(query) {
+function getTwitterData(query, callback) {
   client.get('search/tweets', {q: query}, function(error, tweets, response){
-     console.log(tweets[0]);
+    console.log(tweets.statuses[0])
+    //Store an array of TL event for each media returned by IG
+    tweetObjects = []
+
+    for (var i = 0; i < tweets.statuses.length; i++) {
+      var tweet = tweets.statuses[i];
+      var tweetDate = moment(new Date(tweet.created_at));
+
+      //Create a TL event for each media
+      var tweetObject = {
+        "media": {
+            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
+            "credit": "@" + tweet.user.screen_name
+          },
+          "start_date": {
+            "month": tweetDate.format("MM"),
+            "day": tweetDate.format("DD"),
+            "year": tweetDate.format("YYYY"),
+            "hour": tweetDate.format("HH"),
+            "minute": tweetDate.format("mm"),
+            "second": tweetDate.format("ss")
+          },
+          "text": {
+            "headline": "",
+            "text": "<p>" + tweet.text + "</p>"
+          }
+      }
+      tweetObjects.push(tweetObject);
+    }
+
+    callback(tweetObjects)
   });
 }
 
@@ -41,14 +71,14 @@ function getInstagramData(query, callback) {
   ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
     
     //Store an array of TL event for each media returned by IG
-    mediaObjects = []
+    var mediaObjects = []
 
     for (var i = 0; i < medias.length; i++) {
-      media = medias[i];
-      instagramDate = moment(new Date(media.created_time * 1000));
+      var media = medias[i];
+      var instagramDate = moment(new Date(media.created_time * 1000));
 
       //Create a TL event for each media
-      mediaObject = {
+      var mediaObject = {
         "media": {
             "url": media.images.standard_resolution.url,
             "caption": media.internalTag,
@@ -81,13 +111,18 @@ function getInstagramData(query, callback) {
 // the data into a coherent response to send back to
 // the front-end.
 function compileData(query, callback) {
-  // getTwitterData(query)
-  getInstagramData(query, function(igMedia) {
+  getTwitterData(query, function(tweets) {
     finalJSON = {
-      "events": igMedia
+      "events": tweets
     }
     callback(finalJSON)
   });
+  // getInstagramData(query, function(igMedia) {
+  //   finalJSON = {
+  //     "events": igMedia
+  //   }
+  //   callback(finalJSON)
+  // });
 }
 
 app.get('/', function(req, res) {
