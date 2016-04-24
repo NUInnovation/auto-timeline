@@ -5,38 +5,83 @@
     <title>Auto-Timeline</title>
 
     <!--fonts-->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
 
     <!--css-->
     <link rel="stylesheet" href="css/main.css" media="screen" title="no title" charset="utf-8">
 
+    <!-- Compiled and minified CSS -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+
+ <!-- Compiled and minified JavaScript -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
 
     <!--js-->
     <script   src="https://code.jquery.com/jquery-1.12.3.js"   integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc="   crossorigin="anonymous"></script>
-
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
-
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
-
     <script type="text/javascript" src="js/app.js"></script>
   </head>
 
   <body>
     <div class="at-wrapper">
       <div class="at-back">
-      <div class="at-header">
-        Auto-Timeline
-      </div>
-      <div class=" input-field search-box">
-        <span>Enter Your Hashtag Here ! </span>
-        <input placeholder="#Weddings..." id="first_name" type="text" class="validate">
-        <div class="search-btn">
-          <a class="waves-effect waves-light btn ">GO</a>
+        <div class="at-header">
+          Auto-Timeline
+        </div>
+        <div class=" input-field search-box">
+          <p>Automatically generated news or event timelines for your <span style="color:#FFb000; font-weight: bold;">HASHTAG</span></p>
+          <div class="inputset">
+            <input placeholder="#hackthon..." id="at-input" value='#'>
+            <button id='at-btn' type="button" name="button">Generate</button>
+          </div>
+
         </div>
       </div>
+    </div>
+    <div class="ex-wrapper">
+    <div class="at-example">
+      <div class="at-exheader">
+        Examples
+      </div>
+      <div class="at-exwrapper">
+        <div class="row">
+          <div class="col s3">
+            <div class="card">
+              <div class="card-image">
+                <img src="css/img/2.jpg">
+              </div>
+
+              <div class="card-action">
+                <a href="#">#Stussy</a>
+              </div>
+            </div>
+          </div>
+          <div class="col s3  offset-s1 ">
+            <div class="card">
+              <div class="card-image">
+                <img src="css/img/1.png">
+              </div>
+
+              <div class="card-action">
+                <a href="#">#Hiking</a>
+              </div>
+            </div>
+          </div>
+          <div class="col s3  offset-s1  ">
+            <div class="card">
+              <div class="card-image">
+                <img src="css/img/3.jpg">
+              </div>
+              <div class="card-action">
+                <a href="#">#KOBE</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+  </div>
   </body>
 </html>
