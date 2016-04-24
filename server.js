@@ -30,79 +30,82 @@ var client = new Twitter({
 ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
 //This function gathers and process media from Twitter
-function getTwitterData(query, callback) {
-  client.get('search/tweets', {q: query}, function(error, tweets, response){
-    console.log(tweets.statuses[0])
-    //Store an array of TL event for each media returned by IG
-    tweetObjects = []
+function getTwitterData(query) {
+  return new Promise(function(resolve, reject) {
+    client.get('search/tweets', {q: query}, function(error, tweets, response){
+      //Store an array of TL event for each media returned by IG
+      tweetObjects = []
 
-    for (var i = 0; i < tweets.statuses.length; i++) {
-      var tweet = tweets.statuses[i];
-      var tweetDate = moment(new Date(tweet.created_at));
+      for (var i = 0; i < tweets.statuses.length; i++) {
+        var tweet = tweets.statuses[i];
+        var tweetDate = moment(new Date(tweet.created_at));
 
-      //Create a TL event for each media
-      var tweetObject = {
-        "media": {
-            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
-            "credit": "@" + tweet.user.screen_name
-          },
-          "start_date": {
-            "month": tweetDate.format("MM"),
-            "day": tweetDate.format("DD"),
-            "year": tweetDate.format("YYYY"),
-            "hour": tweetDate.format("HH"),
-            "minute": tweetDate.format("mm"),
-            "second": tweetDate.format("ss")
-          },
-          "text": {
-            "headline": "",
-            "text": "<p>" + tweet.text + "</p>"
-          }
+        //Create a TL event for each media
+        var tweetObject = {
+          "media": {
+              "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
+              "credit": "@" + tweet.user.screen_name
+            },
+            "start_date": {
+              "month": tweetDate.format("MM"),
+              "day": tweetDate.format("DD"),
+              "year": tweetDate.format("YYYY"),
+              "hour": tweetDate.format("HH"),
+              "minute": tweetDate.format("mm"),
+              "second": tweetDate.format("ss")
+            },
+            "text": {
+              "headline": "",
+              "text": "<p>" + tweet.text + "</p>"
+            }
+        }
+        tweetObjects.push(tweetObject);
       }
-      tweetObjects.push(tweetObject);
-    }
 
-    callback(tweetObjects)
+      resolve(tweetObjects)
+    });
   });
 }
 
 //This function gathers and process media from Instagram
-function getInstagramData(query, callback) {
-  ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
-    
-    //Store an array of TL event for each media returned by IG
-    var mediaObjects = []
+function getInstagramData(query) {
+  return new Promise(function(resolve, reject) {
+    ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
+      
+      //Store an array of TL event for each media returned by IG
+      var mediaObjects = []
 
-    for (var i = 0; i < medias.length; i++) {
-      var media = medias[i];
-      var instagramDate = moment(new Date(media.created_time * 1000));
+      for (var i = 0; i < medias.length; i++) {
+        var media = medias[i];
+        var instagramDate = moment(new Date(media.created_time * 1000));
 
-      //Create a TL event for each media
-      var mediaObject = {
-        "media": {
-            "url": media.images.standard_resolution.url,
-            "caption": media.internalTag,
-            "credit": "@" + media.user.username,
-            "thumb": media.images.standard_resolution.url
-          },
-          "start_date": {
-            "month": instagramDate.format("MM"),
-            "day": instagramDate.format("DD"),
-            "year": instagramDate.format("YYYY"),
-            "hour": instagramDate.format("HH"),
-            "minute": instagramDate.format("mm"),
-            "second": instagramDate.format("ss")
-          },
-          "text": {
-            "headline": "",
-            "text": "<p>" + media.caption.text + "</p>"
-          }
+        //Create a TL event for each media
+        var mediaObject = {
+          "media": {
+              "url": media.images.standard_resolution.url,
+              "caption": media.internalTag,
+              "credit": "@" + media.user.username,
+              "thumb": media.images.standard_resolution.url
+            },
+            "start_date": {
+              "month": instagramDate.format("MM"),
+              "day": instagramDate.format("DD"),
+              "year": instagramDate.format("YYYY"),
+              "hour": instagramDate.format("HH"),
+              "minute": instagramDate.format("mm"),
+              "second": instagramDate.format("ss")
+            },
+            "text": {
+              "headline": "",
+              "text": "<p>" + media.caption.text + "</p>"
+            }
+        }
+
+        mediaObjects.push(mediaObject);
       }
 
-      mediaObjects.push(mediaObject);
-    }
-
-    callback(mediaObjects)
+      resolve(mediaObjects)
+    });
   });
 }
 
@@ -111,18 +114,16 @@ function getInstagramData(query, callback) {
 // the data into a coherent response to send back to
 // the front-end.
 function compileData(query, callback) {
-  getTwitterData(query, function(tweets) {
+  var promises = [getTwitterData(query), getInstagramData(query)]
+  Promise.all(promises).then(function() {
+    fullResults = arguments[0][0].concat(arguments[0][1])
     finalJSON = {
-      "events": tweets
+      "events": fullResults
     }
     callback(finalJSON)
+  }, function(err) {
+    // error occurred
   });
-  // getInstagramData(query, function(igMedia) {
-  //   finalJSON = {
-  //     "events": igMedia
-  //   }
-  //   callback(finalJSON)
-  // });
 }
 
 app.get('/', function(req, res) {
