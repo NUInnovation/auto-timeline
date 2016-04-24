@@ -29,22 +29,25 @@ var client = new Twitter({
 //Instagram API Setup
 ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
+//This function gathers and process media from Twitter
 function getTwitterData(query) {
   client.get('search/tweets', {q: query}, function(error, tweets, response){
      console.log(tweets[0]);
   });
 }
 
-function getInstagramData(query) {
-  console.log("Attempting to call instagram")
-  processeData = []
+//This function gathers and process media from Instagram
+function getInstagramData(query, callback) {
   ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
+    
+    //Store an array of TL event for each media returned by IG
     mediaObjects = []
 
-    for (var i = 0; i <= medias.length; i++) {
+    for (var i = 0; i < medias.length; i++) {
       media = medias[i];
       instagramDate = moment(new Date(media.created_time * 1000));
 
+      //Create a TL event for each media
       mediaObject = {
         "media": {
             "url": media.images.standard_resolution.url,
@@ -69,9 +72,10 @@ function getInstagramData(query) {
       mediaObjects.push(mediaObject);
     }
 
-    return(mediaObjects)
+    callback(mediaObjects)
   });
 }
+
 // This will be the central function for hitting
 // each of the different platform APIs and compiling
 // the data into a coherent response to send back to
@@ -79,13 +83,23 @@ function getInstagramData(query) {
 function compileData(query) {
   // getTwitterData(query)
   console.log('compiling data')
-  getInstagramData(query)
+  getInstagramData(query, function(igMedia) {
+    finalJSON = {
+      "events": igMedia
+    }
+
+    console.log(JSON.stringify(finalJSON))
+  });
 }
 
 app.get('/', function(req, res) {
   console.log("Got main endpoint");
   compileData("aera16");
 	res.render('home.html');
+});
+
+app.get('/test', function(req, res) {
+  res.render('timeline-test.html');
 });
 
 app.get('/create', function(req, res) {
