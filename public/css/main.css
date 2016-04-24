@@ -115,7 +115,6 @@ body{
 }
 
 .tl-timeline {
-  height:300px;
-  width:700px;
+  height:700px;
+  width:100%;
 }
-      
