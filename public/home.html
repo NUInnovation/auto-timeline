@@ -26,6 +26,7 @@
 
 
 
+
   </head>
 
   <body>
@@ -45,6 +46,7 @@
       </div>
     </div>
 
+    <div id="timeline-header"></div>
     <div id="timeline"></div>
 
     <div class="ex-wrapper">
@@ -92,12 +94,17 @@
       <script src="../js/timeline.js"></script>
       <script>
       $('#at-btn').click(function() {
-        var query  = $('.form-control').val();
+        $('#timeline-header').show();
+        var tag = $('#at-input').val();
+        tag = tag.substring(1);
 
-        var timeline = new TL.Timeline('timeline', '/create?query=' + query, {
+        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
           ga_property_id: "UA-27829802-4"
         });
-        console.log('refreshed timeline')
+        console.log('refreshed timeline');
+        $('.ex-wrapper').hide();
+        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
+
       });
 
     </script>

@@ -5,14 +5,14 @@ body{
 }
 
 .at-wrapper{
-  height: 640px;
+  height: 650px;
   overflow: auto;
   background-image: url('img/bg.jpg');
   background-size: cover;
 }
 
 .at-back{
-  height: 640px;
+  height: 650px;
   background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -20,7 +20,7 @@ body{
   width: 100%;
   font-size: 4em;
   text-align: center;
-  padding-top: 150px;
+  padding-top: 13%;
   padding-bottom: 10px;
   text-shadow:1px 1px 4px #444;
 
@@ -115,6 +115,25 @@ body{
 }
 
 .tl-timeline {
-  height:700px;
+  height:600px;
   width:100%;
+}
+
+#timeline-header{
+  display: none;
+  background-color: #FAFAFA;
+  color: #333;
+  font-size: 3.5em;
+  padding-left: 100px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+#timeline-header span{
+  color: #ffb000;
+}
+
+.tl-timeline p{
+  margin-top: 0px;
+  font-size: 12px;
 }

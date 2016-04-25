@@ -34,7 +34,7 @@ function getTwitterData(query) {
   return new Promise(function(resolve, reject) {
     client.get('search/tweets', {q: query}, function(error, tweets, response){
       //Store an array of TL event for each media returned by IG
-      tweetObjects = []
+      tweetObjects = [];
 
       for (var i = 0; i < tweets.statuses.length; i++) {
         var tweet = tweets.statuses[i];
@@ -71,7 +71,7 @@ function getTwitterData(query) {
 function getInstagramData(query) {
   return new Promise(function(resolve, reject) {
     ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
-      
+
       //Store an array of TL event for each media returned by IG
       var mediaObjects = []
 
