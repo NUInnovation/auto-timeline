@@ -29,42 +29,66 @@ var client = new Twitter({
 //Instagram API Setup
 ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
+function structureDict(tweets, filterFlag) {
+    tweetObjects = []
+    for (var i = 0; i < tweets.statuses.length; i++) {
+      var tweet = tweets.statuses[i];
+      
+      if (filterFlag) {
+        console.log(tweet.favorited)
+        if(!tweet.favorited) {
+          continue;
+        }
+      }
+      var tweetDate = moment(new Date(tweet.created_at));
+
+      //Create a TL event for each media
+      var tweetObject = {
+        "media": {
+            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
+            "credit": "@" + tweet.user.screen_name
+          },
+          "start_date": {
+            "month": tweetDate.format("MM"),
+            "day": tweetDate.format("DD"),
+            "year": tweetDate.format("YYYY"),
+            "hour": tweetDate.format("HH"),
+            "minute": tweetDate.format("mm"),
+            "second": tweetDate.format("ss")
+          },
+          "text": {
+            "headline": "",
+            "text": "<p>" + tweet.text + "</p>"
+          }
+      }
+      tweetObjects.push(tweetObject);
+    }
+    return(tweetObjects)
+  }
+
 //This function gathers and process media from Twitter
 function getTwitterData(query) {
   return new Promise(function(resolve, reject) {
-    client.get('search/tweets', {q: query}, function(error, tweets, response){
+    client.get('search/tweets', {q: query, count: 100, result_type: "popular"}, function(error, popularTweets, response){
       //Store an array of TL event for each media returned by IG
-      tweetObjects = [];
-
-      for (var i = 0; i < tweets.statuses.length; i++) {
-        var tweet = tweets.statuses[i];
-        var tweetDate = moment(new Date(tweet.created_at));
-
-        //Create a TL event for each media
-        var tweetObject = {
-          "media": {
-              "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
-              "credit": "@" + tweet.user.screen_name
-            },
-            "start_date": {
-              "month": tweetDate.format("MM"),
-              "day": tweetDate.format("DD"),
-              "year": tweetDate.format("YYYY"),
-              "hour": tweetDate.format("HH"),
-              "minute": tweetDate.format("mm"),
-              "second": tweetDate.format("ss")
-            },
-            "text": {
-              "headline": "",
-              "text": "<p>" + tweet.text + "</p>"
-            }
-        }
-        tweetObjects.push(tweetObject);
+      console.log(popularTweets)
+      if(error) {
+        console.log(error)  
       }
 
-      resolve(tweetObjects)
+      if(popularTweets.statuses.length == 0) {
+        client.get('search/tweets', {q: query, count: 100}, function(error, tweets, response){
+          var filterFlag = true;
+          console.log(tweets.search_metadata)
+          resolve(structureDict(tweets, filterFlag))
+        });
+      }
+      else {
+        resolve(structureDict(popularTweets))
+      }
     });
   });
+
 }
 
 //This function gathers and process media from Instagram
