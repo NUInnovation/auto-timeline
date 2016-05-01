@@ -29,13 +29,12 @@ var client = new Twitter({
 //Instagram API Setup
 ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
-function structureDict(tweets, filterFlag) {
+function structureAndFilterTweets(tweets, filterFlag) {
     tweetObjects = []
-    for (var i = 0; i < tweets.statuses.length; i++) {
-      var tweet = tweets.statuses[i];
+    for (var i = 0; i < tweets.length; i++) {
+      var tweet = tweets[i];
       
       if (filterFlag) {
-        console.log(tweet.favorited)
         if(!tweet.favorited) {
           continue;
         }
@@ -71,24 +70,47 @@ function getTwitterData(query) {
   return new Promise(function(resolve, reject) {
     client.get('search/tweets', {q: query, count: 100, result_type: "popular"}, function(error, popularTweets, response){
       //Store an array of TL event for each media returned by IG
-      console.log(popularTweets)
       if(error) {
         console.log(error)  
       }
 
       if(popularTweets.statuses.length == 0) {
-        client.get('search/tweets', {q: query, count: 100}, function(error, tweets, response){
+        twitterPage(query, "?q=" + query + "&count=100", 0, [], function(allTweets) {
           var filterFlag = true;
-          console.log(tweets.search_metadata)
-          resolve(structureDict(tweets, filterFlag))
+          resolve(structureAndFilterTweets(allTweets, filterFlag));
         });
-      }
+      } 
       else {
-        resolve(structureDict(popularTweets))
+        resolve(structureAndFilterTweets(popularTweets))
       }
     });
   });
 
+}
+
+function twitterPage(query, page, callCount, storedTweets, callback) {
+  console.log("Call to twitterPage()")
+  var stackCount = callCount + 1;
+  client.get('search/tweets.json' + page, {}, function(error, tweets, response){
+    //Stored Tweets from call in array
+    var callCumulativeTweets = storedTweets.concat(tweets.statuses);
+
+    //Get the next page
+    if('next_results' in tweets.search_metadata) {
+          var nextPage = tweets.search_metadata.next_results;
+    }
+    else {
+      callback(callCumulativeTweets)
+    }
+    console.log("Call Count: " + stackCount + ". Next Page: " + nextPage);
+
+    if ((callCount < 10) && nextPage != '') {
+      twitterPage(query, nextPage, stackCount, callCumulativeTweets, callback)
+    }
+    else {
+      callback(callCumulativeTweets)
+    }
+  });
 }
 
 //This function gathers and process media from Instagram
@@ -156,6 +178,16 @@ app.get('/', function(req, res) {
 
 app.get('/test', function(req, res) {
   res.render('timeline-test.html');
+});
+
+app.get('/page', function(req, res) {
+  client.get('search/tweets.json?max_id=725932406079770623&q=chi2016&count=100&include_entities=1', {}, function(error, tweets, response){
+    if(error) {
+      console.log(error)
+    } else {
+      console.log(tweets)
+    }
+  });
 });
 
 app.get('/create', function(req, res) {
