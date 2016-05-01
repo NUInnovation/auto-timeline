@@ -62,6 +62,9 @@ function structureAndFilterTweets(tweets, filterFlag) {
       }
       tweetObjects.push(tweetObject);
     }
+    if (filterFlag) {
+      console.log("Tweets Into Filter: " + tweets.length + ". Tweets Out of Filter: " + tweetObjects.length)
+    }
     return(tweetObjects)
   }
 
@@ -76,7 +79,8 @@ function getTwitterData(query) {
 
       if(popularTweets.statuses.length == 0) {
         twitterPage(query, "?q=" + query + "&count=100", 0, [], function(allTweets) {
-          var filterFlag = true;
+          var filterFlag = false;
+          console.log("Total Tweets: " + allTweets.length);
           resolve(structureAndFilterTweets(allTweets, filterFlag));
         });
       } 
@@ -89,7 +93,6 @@ function getTwitterData(query) {
 }
 
 function twitterPage(query, page, callCount, storedTweets, callback) {
-  console.log("Call to twitterPage()")
   var stackCount = callCount + 1;
   client.get('search/tweets.json' + page, {}, function(error, tweets, response){
     //Stored Tweets from call in array
@@ -102,7 +105,7 @@ function twitterPage(query, page, callCount, storedTweets, callback) {
     else {
       callback(callCumulativeTweets)
     }
-    console.log("Call Count: " + stackCount + ". Next Page: " + nextPage);
+    console.log("Page Call Count: " + stackCount + ". Next Page: " + nextPage);
 
     if ((callCount < 10) && typeof(nextPage) != 'undefined') {
       twitterPage(query, nextPage, stackCount, callCumulativeTweets, callback)
