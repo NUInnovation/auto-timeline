@@ -97,6 +97,7 @@ body{
 }
 
 .at-example{
+  padding-left: 4%;
   overflow: auto;
   width: 1100px;
   margin: 0 auto;
