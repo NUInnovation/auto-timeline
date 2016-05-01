@@ -78,7 +78,7 @@ function getTwitterData(query) {
       }
 
       if(popularTweets.statuses.length == 0) {
-        twitterPage(query, "?q=" + query + "&count=100", 0, [], function(allTweets) {
+        twitterPage(query, "?q=%23" + query + "&count=100", 0, [], function(allTweets) {
           var filterFlag = false;
           console.log("Total Tweets: " + allTweets.length);
           resolve(structureAndFilterTweets(allTweets, filterFlag));
