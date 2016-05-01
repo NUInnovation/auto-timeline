@@ -104,7 +104,7 @@ function twitterPage(query, page, callCount, storedTweets, callback) {
     }
     console.log("Call Count: " + stackCount + ". Next Page: " + nextPage);
 
-    if ((callCount < 10) && nextPage != '') {
+    if ((callCount < 10) && typeof(nextPage) != 'undefined') {
       twitterPage(query, nextPage, stackCount, callCumulativeTweets, callback)
     }
     else {
