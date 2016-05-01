@@ -184,16 +184,6 @@ app.get('/test', function(req, res) {
   res.render('timeline-test.html');
 });
 
-app.get('/page', function(req, res) {
-  client.get('search/tweets.json?max_id=725932406079770623&q=chi2016&count=100&include_entities=1', {}, function(error, tweets, response){
-    if(error) {
-      console.log(error)
-    } else {
-      console.log(tweets)
-    }
-  });
-});
-
 app.get('/create', function(req, res) {
   // This is the endpoint an AJAX call will hit to get data.
   var query = req.query.query;
