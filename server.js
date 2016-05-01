@@ -78,7 +78,7 @@ function getTwitterData(query) {
       }
 
       if(popularTweets.statuses.length == 0) {
-        twitterPage(query, "?q=%23" + query + "&count=100", 0, [], function(allTweets) {
+        twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
           var filterFlag = false;
           console.log("Total Tweets: " + allTweets.length);
           resolve(structureAndFilterTweets(allTweets, filterFlag));
@@ -92,6 +92,7 @@ function getTwitterData(query) {
 
 }
 
+//This function can be used to paginate through Twitter API results
 function twitterPage(query, page, callCount, storedTweets, callback) {
   var stackCount = callCount + 1;
   client.get('search/tweets.json' + page, {}, function(error, tweets, response){
