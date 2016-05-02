@@ -77,15 +77,17 @@ function getTwitterData(query) {
         console.log(error)  
       }
 
+      var filterFlag = false;
+
       if(popularTweets.statuses.length == 0) {
         twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
-          var filterFlag = false;
           console.log("Total Tweets: " + allTweets.length);
+          filterFlag = false;
           resolve(structureAndFilterTweets(allTweets, filterFlag));
         });
       } 
       else {
-        resolve(structureAndFilterTweets(popularTweets))
+        resolve(structureAndFilterTweets(popularTweets, filterFlag))
       }
     });
   });
