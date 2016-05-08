@@ -69,94 +69,68 @@ function structureDict(tweets) {
     return(tweetObjects)
   }
 
+// //weighted evalution function
+// function evalution(tweet){
+//   var weight = 0;
+//   weight += tweet.retweet_count;
+//   weight += tweet.user.followers_count*0.05;
+//   weight += tweet.user.friends_count*0.05
 
-// with weighted evaluation
-function structureDict(tweets) {
-    tweetObjects = []
-
-    for (var i = 0; i < tweets.statuses.length; i++) {
-      var tweet = tweets.statuses[i];
-      var tweetDate = moment(new Date(tweet.created_at));
-
-      var weight = 0;
-      if ( tweet.favorited == true ) {
-        weight = weight +1;
-      }
-
-      //Create a TL event for each media
-      var tweetObject = {
-        "media": {
-            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
-            "credit": "@" + tweet.user.screen_name
-          },
-          "start_date": {
-            "month": tweetDate.format("MM"),
-            "day": tweetDate.format("DD"),
-            "year": tweetDate.format("YYYY"),
-            "hour": tweetDate.format("HH"),
-            "minute": tweetDate.format("mm"),
-            "second": tweetDate.format("ss")
-          },
-          "text": {
-            "headline": "",
-            "text": "<p>" + tweet.text + "</p>"
-          }
-      }
-
-      if ( weight > 0 ) {
-        tweetObjects.push(tweetObject);
-      }
-    }
-    console.log(tweetObjects.l)
-    return(tweetObjects)
-  }
+//   if ( tweet.favorited == true ){
+//     weight += 1;
+//   } else if (tweet.user.lang == "en"){
+//     weight += 1;
+//   } else if (tweet.user.verified == true ){
+//     weight += 1;
+//   }
+// }
 
 
-/*
-// with sorted favourite_count
-// var heap = new Heap();
-var hashtable = new HashTable();
+// // with sorted favourite_count
+// // var heap = new Heap();
+// var hashtable = new HashTable();
 
-function structureTopNumFavourites(tweets, tweetNum) {
-    tweetObjects = []
-    favoritedArray = []
+// function structureTopNumFavourites(tweets, tweetNum) {
+//     tweetObjects = []
+//     favoritedArray = []
 
-    for (var i = 0; i < tweets.statuses.length; i++) {
-      var tweet = tweets.statuses[i];
-      var tweetDate = moment(new Date(tweet.created_at));
+//     for (var i = 0; i < tweets.statuses.length; i++) {
+//       var tweet = tweets.statuses[i];
+//       var tweetDate = moment(new Date(tweet.created_at));
 
-      //Create a TL event for each media
-      var tweetObject = {
-        "media": {
-            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
-            "credit": "@" + tweet.user.screen_name
-          },
-          "start_date": {
-            "month": tweetDate.format("MM"),
-            "day": tweetDate.format("DD"),
-            "year": tweetDate.format("YYYY"),
-            "hour": tweetDate.format("HH"),
-            "minute": tweetDate.format("mm"),
-            "second": tweetDate.format("ss")
-          },
-          "text": {
-            "headline": "",
-            "text": "<p>" + tweet.text + "</p>"
-          }
-      }
+//       //Create a TL event for each media
+//       var tweetObject = {
+//         "media": {
+//             "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
+//             "credit": "@" + tweet.user.screen_name
+//           },
+//           "start_date": {
+//             "month": tweetDate.format("MM"),
+//             "day": tweetDate.format("DD"),
+//             "year": tweetDate.format("YYYY"),
+//             "hour": tweetDate.format("HH"),
+//             "minute": tweetDate.format("mm"),
+//             "second": tweetDate.format("ss")
+//           },
+//           "text": {
+//             "headline": "",
+//             "text": "<p>" + tweet.text + "</p>"
+//           }
+//       }
 
-      favoritedArray.push(tweet.user.favourites_count)
+//       favoritedArray.push(tweet.user.favourites_count)
 
-      // tweetObjects.push(tweetObject);
-      hashtable.put('tweet.user.favourites_count', {value:'tweetObject'})
-    }
-    sortedFavoritedArray = Heap.nlargest(favoritedArray,tweetNum)
-    for (var i=0; i < tweetNum; i++){
-      tweetObjects.push(hashtable.get('sortedFavoritedArray[i])'))
-    }
-    return(tweetObjects)
-  }
-*/
+//       // tweetObjects.push(tweetObject);
+//       hashtable.put('tweet.user.favourites_count', {value:'tweetObject'})
+//     }
+//     sortedFavoritedArray = Heap.nlargest(favoritedArray,tweetNum)
+//     for (var i=0; i < tweetNum; i++){
+//       tweetObjects.push(hashta
+//         ble.get('sortedFavoritedArray[i])'))
+//     }
+//     return(tweetObjects)
+//   }
+
 
 // This function gathers and process media from Twitter
 function getTwitterData(query) {
@@ -179,38 +153,6 @@ function getTwitterData(query) {
     });
   });
 }
-
-/*
-// This function gathers and process media from Twitter
-function getTwitterData(query) {
-  return new Promise(function(resolve, reject) {
-    client.get('search/tweets', {q: query, count: 100, result_type: "popular"}, function(error, popularTweets, response){
-      //Store an array of TL event for each media returned by IG
-      console.log(popularTweets)
-      console.log("out the resolve(structureDict) function")
-      if(error) {
-        console.log(error)  
-      }
-
-      var filterFlag = false;
-
-      if(popularTweets.statuses.length == 0) {
-        client.get('search/tweets', {q: query, count: 100}, function(error, tweets, response){
-          var filterFlag = true;
-          console.log(tweets.search_metadata)
-          resolve((tweets, filterFlag))
-          console.log("run the resolve(structureDict) function")
-        });
-      }
-      else {
-        resolve(structureDict(popularTweets, filterFlag))
-      }
-    });
-  });
-}
-*/
-
-
 
 //This function gathers and process media from Instagram
 function getInstagramData(query) {
@@ -273,7 +215,7 @@ function compileData(query, callback) {
 }
 
 app.get('/', function(req, res) {
-	res.render('home.html');
+  res.render('home.html');
 });
 
 app.get('/test', function(req, res) {
@@ -296,5 +238,5 @@ app.use(function(req, res, next) {
 });
 
 app.listen(app.get('port'), function(){
-	console.log('Express server listening on port ' + app.get('port'));
+  console.log('Express server listening on port ' + app.get('port'));
 });
