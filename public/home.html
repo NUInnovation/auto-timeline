@@ -118,7 +118,14 @@
     $("#timeline-header").html('');
     $('#timeline-header').show();
     var tag = $('#at-input').val();
-    tag = tag.substring(1);
+    tag = tag.split("");
+    if(tag[0] == '#'){
+      tag = tag.join('');
+      tag = tag.substring(1);
+    }
+    else{
+      tag = tag.join('');
+    };
 
     localStorage.setItem('hashtag', tag);
     temp = localStorage.getItem("hashtag");
