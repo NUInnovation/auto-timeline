@@ -5,6 +5,8 @@ var bodyParser = require('body-parser');
 var Twitter = require('twitter');
 var ig = require('instagram-node').instagram();
 var moment = require('moment');
+var Heap = require('heap');
+var HashTable = require('hashtable');
 
 var app = express();
 
@@ -29,49 +31,192 @@ var client = new Twitter({
 //Instagram API Setup
 ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
-//This function gathers and process media from Twitter
-function getTwitterData(query) {
-  return new Promise(function(resolve, reject) {
-    client.get('search/tweets', {q: query}, function(error, tweets, response){
-      //Store an array of TL event for each media returned by IG
-      tweetObjects = [];
 
-      for (var i = 0; i < tweets.statuses.length; i++) {
-        var tweet = tweets.statuses[i];
-        var tweetDate = moment(new Date(tweet.created_at));
+function structureDict(tweets) {
+    tweetObjects = []
+    for (var i = 0; i < tweets.statuses.length; i++) {
+      var tweet = tweets.statuses[i];
+      
+      // if (filterFlag) {
+      //   console.log(tweet.favorited)
+      //   if(!tweet.favorited) {
+      //     continue;
+      //   }
+      // }
+      var tweetDate = moment(new Date(tweet.created_at));
 
-        //Create a TL event for each media
-        var tweetObject = {
-          "media": {
-              "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
-              "credit": "@" + tweet.user.screen_name
-            },
-            "start_date": {
-              "month": tweetDate.format("MM"),
-              "day": tweetDate.format("DD"),
-              "year": tweetDate.format("YYYY"),
-              "hour": tweetDate.format("HH"),
-              "minute": tweetDate.format("mm"),
-              "second": tweetDate.format("ss")
-            },
-            "text": {
-              "headline": "",
-              "text": "<p>" + tweet.text + "</p>"
-            }
-        }
-        tweetObjects.push(tweetObject);
+      //Create a TL event for each media
+      var tweetObject = {
+        "media": {
+            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
+            "credit": "@" + tweet.user.screen_name
+          },
+          "start_date": {
+            "month": tweetDate.format("MM"),
+            "day": tweetDate.format("DD"),
+            "year": tweetDate.format("YYYY"),
+            "hour": tweetDate.format("HH"),
+            "minute": tweetDate.format("mm"),
+            "second": tweetDate.format("ss")
+          },
+          "text": {
+            "headline": "",
+            "text": "<p>" + tweet.text + "</p>"
+          }
+      }
+      tweetObjects.push(tweetObject);
+    }
+    return(tweetObjects)
+  }
+
+
+// with weighted evaluation
+function structureDict(tweets) {
+    tweetObjects = []
+
+    for (var i = 0; i < tweets.statuses.length; i++) {
+      var tweet = tweets.statuses[i];
+      var tweetDate = moment(new Date(tweet.created_at));
+
+      var weight = 0;
+      if ( tweet.favorited == true ) {
+        weight = weight +1;
       }
 
-      resolve(tweetObjects)
+      //Create a TL event for each media
+      var tweetObject = {
+        "media": {
+            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
+            "credit": "@" + tweet.user.screen_name
+          },
+          "start_date": {
+            "month": tweetDate.format("MM"),
+            "day": tweetDate.format("DD"),
+            "year": tweetDate.format("YYYY"),
+            "hour": tweetDate.format("HH"),
+            "minute": tweetDate.format("mm"),
+            "second": tweetDate.format("ss")
+          },
+          "text": {
+            "headline": "",
+            "text": "<p>" + tweet.text + "</p>"
+          }
+      }
+
+      if ( weight > 0 ) {
+        tweetObjects.push(tweetObject);
+      }
+    }
+    console.log(tweetObjects.l)
+    return(tweetObjects)
+  }
+
+
+/*
+// with sorted favourite_count
+// var heap = new Heap();
+var hashtable = new HashTable();
+
+function structureTopNumFavourites(tweets, tweetNum) {
+    tweetObjects = []
+    favoritedArray = []
+
+    for (var i = 0; i < tweets.statuses.length; i++) {
+      var tweet = tweets.statuses[i];
+      var tweetDate = moment(new Date(tweet.created_at));
+
+      //Create a TL event for each media
+      var tweetObject = {
+        "media": {
+            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
+            "credit": "@" + tweet.user.screen_name
+          },
+          "start_date": {
+            "month": tweetDate.format("MM"),
+            "day": tweetDate.format("DD"),
+            "year": tweetDate.format("YYYY"),
+            "hour": tweetDate.format("HH"),
+            "minute": tweetDate.format("mm"),
+            "second": tweetDate.format("ss")
+          },
+          "text": {
+            "headline": "",
+            "text": "<p>" + tweet.text + "</p>"
+          }
+      }
+
+      favoritedArray.push(tweet.user.favourites_count)
+
+      // tweetObjects.push(tweetObject);
+      hashtable.put('tweet.user.favourites_count', {value:'tweetObject'})
+    }
+    sortedFavoritedArray = Heap.nlargest(favoritedArray,tweetNum)
+    for (var i=0; i < tweetNum; i++){
+      tweetObjects.push(hashtable.get('sortedFavoritedArray[i])'))
+    }
+    return(tweetObjects)
+  }
+*/
+
+// This function gathers and process media from Twitter
+function getTwitterData(query) {
+  return new Promise(function(resolve, reject) {
+    client.get('search/tweets', {q: query, count: 100, result_type: "popular"}, function(error, popularTweets, response){
+      //Store an array of TL event for each media returned by IG
+      console.log(popularTweets)
+      if(error) {
+        console.log(error)  
+      }
+
+      // if (popularTweets.statuses.length > 10){
+      //   var num = 10
+      //   resolve(structureTopNumFavourites(popularTweets, num))
+      //   console.log("in select top 10 favourites function")
+      // } else {
+        resolve(structureDict(popularTweets))
+        console.log(popularTweets.statuses.length)
+      // }
     });
   });
 }
+
+/*
+// This function gathers and process media from Twitter
+function getTwitterData(query) {
+  return new Promise(function(resolve, reject) {
+    client.get('search/tweets', {q: query, count: 100, result_type: "popular"}, function(error, popularTweets, response){
+      //Store an array of TL event for each media returned by IG
+      console.log(popularTweets)
+      console.log("out the resolve(structureDict) function")
+      if(error) {
+        console.log(error)  
+      }
+
+      var filterFlag = false;
+
+      if(popularTweets.statuses.length == 0) {
+        client.get('search/tweets', {q: query, count: 100}, function(error, tweets, response){
+          var filterFlag = true;
+          console.log(tweets.search_metadata)
+          resolve((tweets, filterFlag))
+          console.log("run the resolve(structureDict) function")
+        });
+      }
+      else {
+        resolve(structureDict(popularTweets, filterFlag))
+      }
+    });
+  });
+}
+*/
+
+
 
 //This function gathers and process media from Instagram
 function getInstagramData(query) {
   return new Promise(function(resolve, reject) {
     ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
-
+    
       //Store an array of TL event for each media returned by IG
       var mediaObjects = []
 
@@ -115,6 +260,7 @@ function getInstagramData(query) {
 // the front-end.
 function compileData(query, callback) {
   var promises = [getTwitterData(query), getInstagramData(query)]
+
   Promise.all(promises).then(function() {
     fullResults = arguments[0][0].concat(arguments[0][1])
     finalJSON = {

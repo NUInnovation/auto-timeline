@@ -4,7 +4,7 @@
       "coordinates": null,
       "favorited": false,
       "truncated": false,
-      "created_at": "Mon Sep 24 03:35:21 +0000 2012",
+      "created_at": "Mon Sep 24 03:35:21 +0000 2012",   //
       "id_str": "250075927172759552",
       "entities": {
         "urls": [
@@ -44,7 +44,7 @@
         "name": "Sean Cummings",
         "profile_image_url": "http://a0.twimg.com/profile_images/2359746665/1v6zfgqo8g0d3mk7ii5s_normal.jpeg",
         "created_at": "Mon Apr 26 06:01:55 +0000 2010",
-        "location": "LA, CA",
+        "locatioƒn": "LA, CA",
         "follow_request_sent": null,
         "profile_link_color": "0084B4",
         "is_translator": false,
@@ -78,19 +78,19 @@
         "profile_use_background_image": true,
         "listed_count": 2,
         "profile_text_color": "333333",
-        "lang": "en",
-        "followers_count": 70,
+        "lang": "en",                //TODO
+        "followers_count": 70,       //TODO
         "protected": false,
         "notifications": null,
         "profile_background_image_url_https": "https://si0.twimg.com/images/themes/theme1/bg.png",
         "profile_background_color": "C0DEED",
-        "verified": false,
+        "verified": false,         //TODO
         "geo_enabled": true,
         "time_zone": "Pacific Time (US & Canada)",
         "description": "Born 330 Live 310",
         "default_profile_image": false,
         "profile_background_image_url": "http://a0.twimg.com/images/themes/theme1/bg.png",
-        "statuses_count": 579,
+        "statuses_count": 579,    //TODO
         "friends_count": 110,
         "following": null,
         "show_all_inline_media": false,
