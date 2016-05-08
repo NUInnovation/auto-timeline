@@ -111,6 +111,7 @@ function twitterPage(query, page, callCount, storedTweets, callback) {
     }
     else {
       callback(callCumulativeTweets)
+      return;
     }
     console.log("Page Call Count: " + stackCount + ". Next Page: " + nextPage);
 
