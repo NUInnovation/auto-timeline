@@ -1,6 +1,58 @@
 var moment = require('moment');
 require('moment-range');
 
+var Heap = require('heap');
+var HashTable = require('hashtable');
+
+
+function primaryFilter(tweets) {
+
+	//Find the correct date range
+	var dateFilteredTweets = dateFilter(tweets);
+
+	//Find counts of tweets per day
+	var tweetsBySect = {};
+	for (var i = 0; i < dateFilteredTweets.length; i++) {
+		var tweetSect = moment(new Date(dateFilteredTweets[i].created_at)).format("MM/DD/YYYY");
+		if(tweetSect in tweetsBySect) {
+			tweetsBySect[tweetSect].push(dateFilteredTweets[i]);
+		}
+		else {
+			tweetsBySect[tweetSect] = [dateFilteredTweets[i]];
+		}
+	}
+	
+	var finalList = []
+
+	//Run tweets for each time sect through evaluator
+	var tweetsPerSect = 5
+	for (var sect in tweetsBySect){
+		var hashtable = new HashTable();
+		var scoresList = []
+		for (var i = 0; i < dateFilteredTweets.length; i++) {
+			var tweet = dateFilteredTweets[i];
+			var score = evaluate(tweet);
+			scoresList.push(score);
+			hashtable.put(score, tweet);
+			// heap.push({score: tweet});
+		}
+		var largeScores = Heap.nlargest(unique(scoresList), tweetsPerSect);
+		for (var i=0; i < tweetsPerSect; i++){
+		    finalList.push(hashtable.get(largeScores[i]))
+		}
+	}
+
+	console.log(finalList)
+}
+
+function unique(xs) {
+  return xs.filter(function(x, i) {
+    return xs.indexOf(x) === i
+  })
+}
+
+//Function for taking the tweets that are produced
+//during the likely time perid of the event.
 function dateFilter(tweets) {
 	//Sort the tweets by created time
 	var sortedTweets = tweets.sort(function(a, b) {
@@ -62,8 +114,27 @@ function dateFilter(tweets) {
 		return consideredRange.contains(moment(new Date(tweet.created_at)), false);
 	});
 
+	return filteredTweets;
+
+}
+
+//Function for evaluating tweets
+function evaluate(tweet){
+	var weight = 0;
+	weight += tweet.retweet_count;
+	weight += tweet.user.followers_count*0.05;
+	weight += tweet.user.friends_count*0.05
+
+	if ( tweet.favorited == true ){
+		weight += 1;
+	} else if (tweet.user.lang == "en"){
+		weight += 1;
+	} else if (tweet.user.verified == true ){
+		weight += 1;
+	}
+	return weight;
 }
 
 module.exports = {
-	dateFilter: dateFilter
+	primaryFilter: primaryFilter
 }

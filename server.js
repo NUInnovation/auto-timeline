@@ -81,11 +81,11 @@ function getTwitterData(query) {
 
       var filterFlag = false;
 
-      if(popularTweets.statuses.length == 0) {
+      if(popularTweets.statuses.length < 10) {
         console.log("No 'popular' tweets returned by query: " + query)
         twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
           console.log("Total Tweets: " + allTweets.length);
-          filter.dateFilter(allTweets);
+          filter.primaryFilter(allTweets);
           filterFlag = false;
           resolve(structureAndFilterTweets(allTweets, filterFlag));
         });
