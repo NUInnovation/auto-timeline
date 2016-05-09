@@ -6,7 +6,8 @@ var Twitter = require('twitter');
 var ig = require('instagram-node').instagram();
 var moment = require('moment');
 
-var filter = require("./filter.js");
+var twitterFilter = require("./twitterFilter.js");
+var instaFilter = require("./instaFilter.js");
 
 var app = express();
 
@@ -85,7 +86,7 @@ function getTwitterData(query) {
         console.log("No 'popular' tweets returned by query: " + query)
         twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
           console.log("Total Tweets: " + allTweets.length);
-          var finalList = filter.primaryFilter(allTweets);
+          var finalList = twitterFilter.primaryFilter(allTweets);
           filterFlag = false;
           resolve(structureAndFilterTweets(finalList, filterFlag));
         });
@@ -187,16 +188,16 @@ function getInstagramData(query) {
         
         //Filter the array one last time to ensure that the media
         //is within the last week
-        var filteredMedia = allMedia.filter(function(media) {
+        var weekMedia = allMedia.filter(function(media) {
           return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
         });
 
         //Print out the dates of th final list of media
-        for (var i = 0; i < filteredMedia.length; i++) {
-          console.log(new Date(filteredMedia[i].created_time * 1000));
+        for (var i = 0; i < weekMedia.length; i++) {
+          console.log(new Date(weekMedia[i].created_time * 1000));
         }
 
-        resolve(structureInstagramMedia(filteredMedia ))
+        resolve(structureInstagramMedia(weekMedia ))
       }
     };
 
