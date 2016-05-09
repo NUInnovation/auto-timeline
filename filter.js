@@ -19,7 +19,6 @@ function dateFilter(tweets) {
 		else {
 			daysDict[tweetTime] = 1;
 		}
-		// console.log(moment(new Date(sortedTweets[i].created_at)).calendar())
 	}
 	console.log(daysDict)
 
@@ -62,22 +61,6 @@ function dateFilter(tweets) {
 	var filteredTweets = sortedTweets.filter(function(tweet) {
 		return consideredRange.contains(moment(new Date(tweet.created_at)), false);
 	});
-
-	console.log(filteredTweets.length);
-
-	//Find counts of tweets per day
-	var filterDict = {};
-	for (var i = 0; i < filteredTweets.length; i++) {
-		var tweetTime = moment(new Date(filteredTweets[i].created_at)).format("MM/DD/YYYY");
-		if(tweetTime in filterDict) {
-			filterDict[tweetTime] += 1;
-		}
-		else {
-			filterDict[tweetTime] = 1;
-		}
-		// console.log(moment(new Date(sortedTweets[i].created_at)).calendar())
-	}
-	console.log(filterDict)
 
 }
 
