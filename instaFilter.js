@@ -1,14 +1,59 @@
 var moment = require('moment');
 require('moment-range');
 
+var Heap = require('heap');
+var HashTable = require('hashtable');
+
+
 function primaryFilter(medias) {
 	//Do a date range filtering on the content
 	var dateFilteredMedia = dateFilter(medias)
 	console.log("Date Filtered Length: " + dateFilteredMedia.length);
 
-	return dateFilteredMedia;
+	//Find counts of tweets per day
+	var mediaBySect = {};
+	for (var i = 0; i < dateFilteredMedia.length; i++) {
+		var mediaSect = moment(new Date(dateFilteredMedia[i].created_time*1000)).format("MM/DD/YYYY");
+		if(mediaSect in mediaBySect) {
+			mediaBySect[mediaSect].push(dateFilteredMedia[i]);
+		}
+		else {
+			mediaBySect[mediaSect] = [dateFilteredMedia[i]];
+		}
+	}
 
-	//Apply evaluations to the content
+	for (var sect in mediaBySect){
+		console.log(sect)
+	}
+
+	//Run tweets for each time sect through evaluator
+	var finalList = []
+	var mediaPerSect = 5
+
+	for (var sect in mediaBySect){
+		//Select the tweets within the sect
+		var sectMedia = mediaBySect[sect];
+		// console.log(sectMedia[0])
+
+		// Setup a hastable and list for heap
+		var hashtable = new HashTable();
+		var scoresList = []
+
+		for (var i = 0; i < sectMedia.length; i++) {
+			var media = sectMedia[i];
+			var score = evaluate(media);
+			scoresList.push(score);
+			hashtable.put(score, media);
+		}
+		//Get the largest few scores in the scoresList
+		var largeScores = Heap.nlargest(unique(scoresList), mediaPerSect);
+		//Push those tweets into the final list
+		for (var i=0; i < mediaPerSect; i++){
+		    finalList.push(hashtable.get(largeScores[i]))
+		}
+	}
+	console.log(finalList.length)
+	return finalList;	
 }
 
 //Function for taking the tweets that are produced
@@ -80,12 +125,19 @@ function dateFilter(medias) {
 
 }
 
+function unique(xs) {
+  return xs.filter(function(x, i) {
+    return xs.indexOf(x) === i
+  })
+}
+
+
 function evaluate(insta){
 	var weight = 0;
-	weight += insta.data[0].likes.count;
-	weight += insta.data[0].comments.count;
-	weight += insta.data[1].likes.count;
-	weight += insta.data[1].comments.count;
+	weight += insta.likes.count;
+	weight += insta.comments.count;
+	weight += insta.likes.count;
+	weight += insta.comments.count;
 	return weight;
 
 }
