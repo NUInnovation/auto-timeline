@@ -91,7 +91,8 @@ function getTwitterData(query) {
         });
       } 
       else {
-        resolve(structureAndFilterTweets(popularTweets, filterFlag))
+        console.log("There were " + popularTweets.statuses.length + " 'popular' tweets returned by query: " + query)
+        resolve(structureAndFilterTweets(popularTweets.statuses, filterFlag))
       }
     });
   });
