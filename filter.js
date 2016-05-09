@@ -94,7 +94,7 @@ function dateFilter(tweets) {
 		}
 		else {
 			if(currCount < 0.5*maxCount) {
-				endDateKey = key;
+				endDateKey = prevKey;
 			}
 		}
 		
