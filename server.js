@@ -166,14 +166,31 @@ function structureInstagramMedia(medias) {
 function getInstagramData(query) {
   return new Promise(function(resolve, reject) {
     var allMedia = []
-    
+    var aboutAWeekAgo = moment().subtract(7, 'days');
+    console.log(aboutAWeekAgo.calendar())
+
     var instagramPage = function(err, result, pagination, remaining, limit) {
-      allMedia = allMedia.concat(result)
-      if(pagination.next) {        
-        pagination.next(instagramPage); // Will get second page results
+
+      if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
+        console.log("Media is within a week old")
+        console.log(moment(result[0].created_time *1000).calendar())
+        allMedia = allMedia.concat(result)
+        if(pagination.next) {        
+          pagination.next(instagramPage); // Will get second page results
+        }
       }
       else {
-        resolve(structureInstagramMedia(allMedia))
+        console.log("Media is too old")
+        
+        var filteredMedia = allMedia.filter(function(media) {
+          return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
+        });
+
+        for (var i = 0; i < filteredMedia.length; i++) {
+          console.log(new Date(filteredMedia[i].created_time * 1000));
+        }
+
+        resolve(structureInstagramMedia(filteredMedia ))
       }
     };
 
@@ -181,16 +198,6 @@ function getInstagramData(query) {
 
   });
 }
-
-// function instagramPage(query, callCount, storedMedia, callback)  {
-//   var stackCount = callCount + 1;
-//   ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
-//     var callCumulativeMedia = storedMedia.concat(medias);
-//     if(pagination.next) {
-//       pagination.next(instagramPage);
-//     }
-//   });
-// };
 
 // This will be the central function for hitting
 // each of the different platform APIs and compiling
