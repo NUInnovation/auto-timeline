@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="card-action">
-                  <a href="#">#Stussy</a>
+                  <a href="#" id="Example1">#HackDisrupt</a>
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="card-action">
-                  <a href="#">#Hiking</a>
+                  <a href="#" id="Example2">#ImWithHer</a>
                 </div>
               </div>
             </div>
@@ -86,7 +86,7 @@
                   <img src="css/img/3.jpg">
                 </div>
                 <div class="card-action">
-                  <a href="#">#KOBE</a>
+                  <a href="#" id="Example3">#MothersDay</a>
                 </div>
               </div>
             </div>
@@ -153,6 +153,48 @@
       generate();
     }
   });
+
+        $('#Example1').click(function() {
+        $("#timeline-header").html('');
+        $('#timeline-header').show();
+        var tag = 'HackDisrupt'
+
+        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
+          ga_property_id: "UA-27829802-4"
+        });
+        console.log('refreshed timeline');
+        $('.ex-wrapper').hide();
+        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
+        $("html,body").animate({ scrollTop: "700px"},500);
+      });
+
+      $('#Example2').click(function() {
+        $("#timeline-header").html('');
+        $('#timeline-header').show();
+        var tag = 'ImWithHer'
+
+        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
+          ga_property_id: "UA-27829802-4"
+        });
+        console.log('refreshed timeline');
+        $('.ex-wrapper').hide();
+        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
+        $("html,body").animate({ scrollTop: "700px"},500);
+      });
+
+      $('#Example3').click(function() {
+        $("#timeline-header").html('');
+        $('#timeline-header').show();
+        var tag = 'MothersDay'
+
+        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
+          ga_property_id: "UA-27829802-4"
+        });
+        console.log('refreshed timeline');
+        $('.ex-wrapper').hide();
+        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
+        $("html,body").animate({ scrollTop: "700px"},500);
+      });
 
 
   </script>
