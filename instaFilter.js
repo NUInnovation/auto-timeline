@@ -3,7 +3,10 @@ require('moment-range');
 
 function primaryFilter(medias) {
 	//Do a date range filtering on the content
-	dateFilter(medias)
+	var dateFilteredMedia = dateFilter(medias)
+	console.log("Date Filtered Length: " + dateFilteredMedia.length);
+
+	return dateFilteredMedia;
 
 	//Apply evaluations to the content
 }

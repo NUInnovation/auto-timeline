@@ -159,7 +159,7 @@ function structureInstagramMedia(medias) {
 
     mediaObjects.push(mediaObject);
   }
-
+  console.log("Media Objects: " + mediaObjects.length)
   return mediaObjects;
 }
 
@@ -197,7 +197,10 @@ function getInstagramData(query) {
           console.log(new Date(weekMedia[i].created_time * 1000));
         }
 
-        resolve(structureInstagramMedia(weekMedia ))
+        //Run the media through the filter
+        var filteredMedia = instaFilter.primaryFilter(weekMedia);
+
+        resolve(structureInstagramMedia(filteredMedia))
       }
     };
 
