@@ -26,8 +26,6 @@ function primaryFilter(tweets) {
 	var finalList = []
 	var tweetsPerSect = 5
 	for (var sect in tweetsBySect){
-		console.log("Section: " + sect + ". Count: " + tweetsBySect[sect].length);
-
 		//Select the tweets within the sect
 		var sectTweets = tweetsBySect[sect];
 
@@ -43,26 +41,11 @@ function primaryFilter(tweets) {
 		}
 		//Get the largest few scores in the scoresList
 		var largeScores = Heap.nlargest(unique(scoresList), tweetsPerSect);
-		console.log(largeScores);
 		//Push those tweets into the final list
 		for (var i=0; i < tweetsPerSect; i++){
 		    finalList.push(hashtable.get(largeScores[i]))
 		}
 	}
-
-	//Find counts of tweets per day
-	// console.log(finalList.length)
-	// var daysDict = {};
-	// for (var i = 0; i < finalList.length; i++) {
-	// 	var tweetTime = moment(new Date(finalList[i].created_at)).format("MM/DD/YYYY");
-	// 	if(tweetTime in daysDict) {
-	// 		daysDict[tweetTime] += 1;
-	// 	}
-	// 	else {
-	// 		daysDict[tweetTime] = 1;
-	// 	}
-	// }
-	// console.log(daysDict)
 
 	return finalList;	
 }

@@ -85,9 +85,9 @@ function getTwitterData(query) {
         console.log("No 'popular' tweets returned by query: " + query)
         twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
           console.log("Total Tweets: " + allTweets.length);
-          filter.primaryFilter(allTweets);
+          var finalList = filter.primaryFilter(allTweets);
           filterFlag = false;
-          resolve(structureAndFilterTweets(allTweets, filterFlag));
+          resolve(structureAndFilterTweets(finalList, filterFlag));
         });
       } 
       else {
