@@ -11,6 +11,19 @@ function primaryFilter(tweets) {
 	var dateFilteredTweets = dateFilter(tweets);
 
 	//Find counts of tweets per day
+	var daysDict = {};
+	for (var i = 0; i < dateFilteredTweets.length; i++) {
+		var tweetTime = moment(new Date(dateFilteredTweets[i].created_at)).format("MM/DD/YYYY");
+		if(tweetTime in daysDict) {
+			daysDict[tweetTime] += 1;
+		}
+		else {
+			daysDict[tweetTime] = 1;
+		}
+	}
+	console.log(daysDict)
+
+	//Find counts of tweets per day
 	var tweetsBySect = {};
 	for (var i = 0; i < dateFilteredTweets.length; i++) {
 		var tweetSect = moment(new Date(dateFilteredTweets[i].created_at)).format("MM/DD/YYYY");
@@ -21,28 +34,36 @@ function primaryFilter(tweets) {
 			tweetsBySect[tweetSect] = [dateFilteredTweets[i]];
 		}
 	}
-	
-	var finalList = []
 
 	//Run tweets for each time sect through evaluator
+	var finalList = []
 	var tweetsPerSect = 5
 	for (var sect in tweetsBySect){
+		console.log(sect)
+
+		//Select the tweets within the sect
+		var sectTweets = tweetsBySect[sect];
+
+		//Setup a hastable and list for heap
 		var hashtable = new HashTable();
 		var scoresList = []
-		for (var i = 0; i < dateFilteredTweets.length; i++) {
+
+		for (var i = 0; i < sectTweets.length; i++) {
 			var tweet = dateFilteredTweets[i];
 			var score = evaluate(tweet);
 			scoresList.push(score);
 			hashtable.put(score, tweet);
-			// heap.push({score: tweet});
 		}
+		//Get the largest few scores in the scoresList
 		var largeScores = Heap.nlargest(unique(scoresList), tweetsPerSect);
+
+		//Push those tweets into the final list
 		for (var i=0; i < tweetsPerSect; i++){
 		    finalList.push(hashtable.get(largeScores[i]))
 		}
 	}
 
-	console.log(finalList)
+	// console.log(finalList)
 }
 
 function unique(xs) {
@@ -94,7 +115,7 @@ function dateFilter(tweets) {
 		}
 		else {
 			if(currCount < 0.5*maxCount) {
-				endDateKey = prevKey;
+				endDateKey = key;
 			}
 		}
 		
