@@ -166,11 +166,14 @@ function structureInstagramMedia(medias) {
 function getInstagramData(query) {
   return new Promise(function(resolve, reject) {
     var allMedia = []
+
+    //Set a variable to represent a week ago
     var aboutAWeekAgo = moment().subtract(7, 'days');
     console.log(aboutAWeekAgo.calendar())
 
     var instagramPage = function(err, result, pagination, remaining, limit) {
 
+      //Only add media to the list if it is within the last week
       if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
         console.log("Media is within a week old")
         console.log(moment(result[0].created_time *1000).calendar())
@@ -182,10 +185,13 @@ function getInstagramData(query) {
       else {
         console.log("Media is too old")
         
+        //Filter the array one last time to ensure that the media
+        //is within the last week
         var filteredMedia = allMedia.filter(function(media) {
           return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
         });
 
+        //Print out the dates of th final list of media
         for (var i = 0; i < filteredMedia.length; i++) {
           console.log(new Date(filteredMedia[i].created_time * 1000));
         }
@@ -194,6 +200,7 @@ function getInstagramData(query) {
       }
     };
 
+    //Call paginating API call
     ig.tag_media_recent(query, instagramPage);
 
   });
