@@ -59,7 +59,7 @@ function dateFilter(medias) {
 				endDateKey = key;
 			}
 		}
-		
+
 		prevKey = key
 	}
 
@@ -77,6 +77,16 @@ function dateFilter(medias) {
 	});
 
 	return filteredMedia;
+
+}
+
+function evaluate(insta){
+	var weight = 0;
+	weight += insta.data[0].likes.count;
+	weight += insta.data[0].comments.count;
+	weight += insta.data[1].likes.count;
+	weight += insta.data[1].comments.count;
+	return weight;
 
 }
 
