@@ -20,8 +20,42 @@ function dateFilter(tweets) {
 		}
 		// console.log(moment(new Date(sortedTweets[i].created_at)).calendar())
 	}
-
 	console.log(daysDict)
+
+	//Find max count value
+	var maxCount = daysDict[Object.keys(daysDict).reduce(function(a, b){ return daysDict[a] > daysDict[b] ? a : b })];
+
+	console.log("Max Count: " + maxCount);
+
+	//Iterate through list to find the start and stop times
+	var startDateKey = null;
+	var endDateKey = null;
+	var prevKey = null;
+	for (var key in daysDict){
+
+		var currCount = daysDict[key];
+
+		if(startDateKey == null) {
+			if(currCount >= 0.5*maxCount) {
+				startDateKey = key;
+			}
+		}
+		else {
+			if(currCount < 0.5*maxCount) {
+				endDateKey = key;
+			}
+		}
+		
+		prevKey = key
+	}
+
+	if(endDateKey == null) {
+		endDateKey = prevKey;
+	}
+
+	console.log("Start Date: " + startDateKey);
+	console.log("End Date: " + endDateKey);
+	
 
 }
 
