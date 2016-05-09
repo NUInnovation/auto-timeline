@@ -125,47 +125,72 @@ function twitterPage(query, page, callCount, storedTweets, callback) {
   });
 }
 
+
+function structureInstagramMedia(medias) {
+  //Store an array of TL event for each media returned by IG
+  var mediaObjects = []
+
+  for (var i = 0; i < medias.length; i++) {
+    var media = medias[i];
+    var instagramDate = moment(new Date(media.created_time * 1000));
+
+    //Create a TL event for each media
+    var mediaObject = {
+      "media": {
+          "url": media.images.standard_resolution.url,
+          "caption": media.internalTag,
+          "credit": "@" + media.user.username,
+          "thumb": media.images.standard_resolution.url
+        },
+        "start_date": {
+          "month": instagramDate.format("MM"),
+          "day": instagramDate.format("DD"),
+          "year": instagramDate.format("YYYY"),
+          "hour": instagramDate.format("HH"),
+          "minute": instagramDate.format("mm"),
+          "second": instagramDate.format("ss")
+        },
+        "text": {
+          "headline": "",
+          "text": "<p>" + media.caption.text + "</p>"
+        }
+    }
+
+    mediaObjects.push(mediaObject);
+  }
+
+  return mediaObjects;
+}
+
 //This function gathers and process media from Instagram
 function getInstagramData(query) {
   return new Promise(function(resolve, reject) {
-    ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
-
-      //Store an array of TL event for each media returned by IG
-      var mediaObjects = []
-
-      for (var i = 0; i < medias.length; i++) {
-        var media = medias[i];
-        var instagramDate = moment(new Date(media.created_time * 1000));
-
-        //Create a TL event for each media
-        var mediaObject = {
-          "media": {
-              "url": media.images.standard_resolution.url,
-              "caption": media.internalTag,
-              "credit": "@" + media.user.username,
-              "thumb": media.images.standard_resolution.url
-            },
-            "start_date": {
-              "month": instagramDate.format("MM"),
-              "day": instagramDate.format("DD"),
-              "year": instagramDate.format("YYYY"),
-              "hour": instagramDate.format("HH"),
-              "minute": instagramDate.format("mm"),
-              "second": instagramDate.format("ss")
-            },
-            "text": {
-              "headline": "",
-              "text": "<p>" + media.caption.text + "</p>"
-            }
-        }
-
-        mediaObjects.push(mediaObject);
+    var allMedia = []
+    
+    var instagramPage = function(err, result, pagination, remaining, limit) {
+      allMedia = allMedia.concat(result)
+      if(pagination.next) {        
+        pagination.next(instagramPage); // Will get second page results
       }
+      else {
+        resolve(structureInstagramMedia(allMedia))
+      }
+    };
 
-      resolve(mediaObjects)
-    });
+    ig.tag_media_recent(query, instagramPage);
+
   });
 }
+
+// function instagramPage(query, callCount, storedMedia, callback)  {
+//   var stackCount = callCount + 1;
+//   ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
+//     var callCumulativeMedia = storedMedia.concat(medias);
+//     if(pagination.next) {
+//       pagination.next(instagramPage);
+//     }
+//   });
+// };
 
 // This will be the central function for hitting
 // each of the different platform APIs and compiling
