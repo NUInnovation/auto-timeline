@@ -74,7 +74,7 @@ function structureAndFilterTweets(tweets, filterFlag) {
 //This function gathers and process media from Twitter
 function getTwitterData(query) {
   return new Promise(function(resolve, reject) {
-    client.get('search/tweets', {q: query, count: 100, result_type: "popular"}, function(error, popularTweets, response){
+    client.get('search/tweets', {q: query, count: 100, result_type: "popular", lang:"en"}, function(error, popularTweets, response){
       //Store an array of TL event for each media returned by IG
       if(error) {
         console.log(error)  
