@@ -9,6 +9,7 @@ function primaryFilter(medias) {
 	//Do a date range filtering on the content
 	var dateFilteredMedia = dateFilter(medias)
 	console.log("Date Filtered Length: " + dateFilteredMedia.length);
+	var daysCount = 0;
 
 	//Find counts of tweets per day
 	var mediaBySect = {};
@@ -23,12 +24,16 @@ function primaryFilter(medias) {
 	}
 
 	for (var sect in mediaBySect){
-		console.log(sect)
+		daysCount++;
 	}
 
 	//Run tweets for each time sect through evaluator
+	console.log("We are considering " + daysCount + " days.");
 	var finalList = []
-	var mediaPerSect = 5
+	var mediaPerSect = 5;
+	if(daysCount < 3) {
+		mediaPerSect = 10;
+	}
 
 	for (var sect in mediaBySect){
 		//Select the tweets within the sect
@@ -120,7 +125,6 @@ function dateFilter(medias) {
 		var filteredMedia = sortedMedia.filter(function(media) {
 			return moment(new Date(media.created_time*1000)).format("MM/DD/YYYY") == startDateKey
 		});
-		console.log(filteredMedia)
 	}
 	else {
 		var consideredRange = moment().range(new Date(startDateKey), new Date(endDateKey));
