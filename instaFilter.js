@@ -152,11 +152,9 @@ function evaluate(insta){
 	var weight = 0;
 
 	var instaText = insta.caption.text;
-	console.log(instaText);
 	if(instaText != '' && instaText != null) {
 		var likelyLangs = lngDetector.detect(instaText);
 		if(likelyLangs && likelyLangs.length > 0) {
-			console.log(likelyLangs[0])
 			if(likelyLangs[0][0]) {
 				if (likelyLangs[0][0] == "english") {
 					weight += insta.likes.count;

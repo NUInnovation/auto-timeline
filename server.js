@@ -193,11 +193,6 @@ function getInstagramData(query) {
               return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
             });
 
-            //Print out the dates of th final list of media
-            for (var i = 0; i < weekMedia.length; i++) {
-              console.log(new Date(weekMedia[i].created_time * 1000));
-            }
-
             //Run the media through the filter
             var filteredMedia = instaFilter.primaryFilter(weekMedia);
 
