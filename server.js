@@ -174,40 +174,51 @@ function getInstagramData(query) {
 
     var instagramPage = function(err, result, pagination, remaining, limit) {
 
-      //Only add media to the list if it is within the last week
-      if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
-        console.log("Media is within a week old")
-        console.log(moment(result[0].created_time *1000).calendar())
-        allMedia = allMedia.concat(result)
-        if(pagination.next) {        
-          pagination.next(instagramPage); // Will get second page results
+      if(result.length != 0) {
+        //Only add media to the list if it is within the last week
+        if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
+          console.log("Media is within a week old")
+          console.log(moment(result[0].created_time *1000).calendar())
+          allMedia = allMedia.concat(result)
+          if(pagination.next) {        
+            pagination.next(instagramPage); // Will get second page results
+          }
         }
-      }
-      else {
-        console.log("Media is too old")
-        
-        //Filter the array one last time to ensure that the media
-        //is within the last week
-        var weekMedia = allMedia.filter(function(media) {
-          return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
-        });
+        else {
+          console.log("Media is too old")
+          
+          //Filter the array one last time to ensure that the media
+          //is within the last week
+          if(allMedia.length > 0) {
+            var weekMedia = allMedia.filter(function(media) {
+              return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
+            });
 
-        //Print out the dates of th final list of media
-        for (var i = 0; i < weekMedia.length; i++) {
-          console.log(new Date(weekMedia[i].created_time * 1000));
+            //Print out the dates of th final list of media
+            for (var i = 0; i < weekMedia.length; i++) {
+              console.log(new Date(weekMedia[i].created_time * 1000));
+            }
+
+            //Run the media through the filter
+            var filteredMedia = instaFilter.primaryFilter(weekMedia);
+
+            resolve(structureInstagramMedia(filteredMedia))
+          }
+          else {
+            console.log("No media is considered, so we need to resolve with no data.")
+            console.log("All Media: " + allMedia.length)
+            resolve(allMedia)
+          }
         }
 
-        //Run the media through the filter
-        var filteredMedia = instaFilter.primaryFilter(weekMedia);
-
-        resolve(structureInstagramMedia(filteredMedia))
-      }
-    };
+      };
+    }
 
     //Call paginating API call
     ig.tag_media_recent(query, instagramPage);
 
   });
+
 }
 
 // This will be the central function for hitting
