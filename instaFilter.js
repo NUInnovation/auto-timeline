@@ -116,10 +116,18 @@ function dateFilter(medias) {
 	console.log("End Date: " + endDateKey);
 
 	//Take the corresponding subset of the list
-	var consideredRange = moment().range(new Date(startDateKey), new Date(endDateKey));
-	var filteredMedia = sortedMedia.filter(function(media) {
-		return consideredRange.contains(moment(new Date(media.created_time*1000)), false);
-	});
+	if(startDateKey == endDateKey) {
+		var filteredMedia = sortedMedia.filter(function(media) {
+			return moment(new Date(media.created_time*1000)).format("MM/DD/YYYY") == startDateKey
+		});
+		console.log(filteredMedia)
+	}
+	else {
+		var consideredRange = moment().range(new Date(startDateKey), new Date(endDateKey));
+		var filteredMedia = sortedMedia.filter(function(media) {
+			return consideredRange.contains(moment(new Date(media.created_time*1000)), false);
+		});
+	}
 
 	return filteredMedia;
 
