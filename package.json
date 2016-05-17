@@ -11,8 +11,12 @@
     "body-parser": "latest",
     "consolidate": "latest",
     "express": "latest",
+    "hashtable": "^2.0.1",
+    "heap": "^0.2.6",
     "instagram-node": "^0.5.8",
+    "languagedetect": "^1.1.1",
     "moment": "^2.13.0",
+    "moment-range": "^2.2.0",
     "mustache": "latest",
     "twitter": "^1.2.5"
   },

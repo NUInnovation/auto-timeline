@@ -8,6 +8,9 @@ var moment = require('moment');
 var Heap = require('heap');
 var HashTable = require('hashtable');
 
+var twitterFilter = require("./twitterFilter.js");
+var instaFilter = require("./instaFilter.js");
+
 var app = express();
 
 app.set('port', (process.env.PORT || 3000));
@@ -31,18 +34,16 @@ var client = new Twitter({
 //Instagram API Setup
 ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
-
-function structureDict(tweets) {
+function structureAndFilterTweets(tweets, filterFlag) {
     tweetObjects = []
-    for (var i = 0; i < tweets.statuses.length; i++) {
-      var tweet = tweets.statuses[i];
+    for (var i = 0; i < tweets.length; i++) {
+      var tweet = tweets[i];
       
-      // if (filterFlag) {
-      //   console.log(tweet.favorited)
-      //   if(!tweet.favorited) {
-      //     continue;
-      //   }
-      // }
+      if (filterFlag) {
+        if(!tweet.favorited) {
+          continue;
+        }
+      }
       var tweetDate = moment(new Date(tweet.created_at));
 
       //Create a TL event for each media
@@ -66,134 +67,155 @@ function structureDict(tweets) {
       }
       tweetObjects.push(tweetObject);
     }
+
+    if (filterFlag) {
+      console.log("Tweets Into Filter: " + tweets.length + ". Tweets Out of Filter: " + tweetObjects.length)
+    }
     return(tweetObjects)
   }
 
-// //weighted evalution function
-// function evalution(tweet){
-//   var weight = 0;
-//   weight += tweet.retweet_count;
-//   weight += tweet.user.followers_count*0.05;
-//   weight += tweet.user.friends_count*0.05
-
-//   if ( tweet.favorited == true ){
-//     weight += 1;
-//   } else if (tweet.user.lang == "en"){
-//     weight += 1;
-//   } else if (tweet.user.verified == true ){
-//     weight += 1;
-//   }
-// }
-
-
-// // with sorted favourite_count
-// // var heap = new Heap();
-// var hashtable = new HashTable();
-
-// function structureTopNumFavourites(tweets, tweetNum) {
-//     tweetObjects = []
-//     favoritedArray = []
-
-//     for (var i = 0; i < tweets.statuses.length; i++) {
-//       var tweet = tweets.statuses[i];
-//       var tweetDate = moment(new Date(tweet.created_at));
-
-//       //Create a TL event for each media
-//       var tweetObject = {
-//         "media": {
-//             "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
-//             "credit": "@" + tweet.user.screen_name
-//           },
-//           "start_date": {
-//             "month": tweetDate.format("MM"),
-//             "day": tweetDate.format("DD"),
-//             "year": tweetDate.format("YYYY"),
-//             "hour": tweetDate.format("HH"),
-//             "minute": tweetDate.format("mm"),
-//             "second": tweetDate.format("ss")
-//           },
-//           "text": {
-//             "headline": "",
-//             "text": "<p>" + tweet.text + "</p>"
-//           }
-//       }
-
-//       favoritedArray.push(tweet.user.favourites_count)
-
-//       // tweetObjects.push(tweetObject);
-//       hashtable.put('tweet.user.favourites_count', {value:'tweetObject'})
-//     }
-//     sortedFavoritedArray = Heap.nlargest(favoritedArray,tweetNum)
-//     for (var i=0; i < tweetNum; i++){
-//       tweetObjects.push(hashta
-//         ble.get('sortedFavoritedArray[i])'))
-//     }
-//     return(tweetObjects)
-//   }
-
-
-// This function gathers and process media from Twitter
+//This function gathers and process media from Twitter
 function getTwitterData(query) {
   return new Promise(function(resolve, reject) {
-    client.get('search/tweets', {q: query, count: 100, result_type: "popular"}, function(error, popularTweets, response){
+    client.get('search/tweets', {q: query, count: 100, result_type: "popular", lang:"en"}, function(error, popularTweets, response){
       //Store an array of TL event for each media returned by IG
-      console.log(popularTweets)
       if(error) {
         console.log(error)  
       }
 
-      // if (popularTweets.statuses.length > 10){
-      //   var num = 10
-      //   resolve(structureTopNumFavourites(popularTweets, num))
-      //   console.log("in select top 10 favourites function")
-      // } else {
-        resolve(structureDict(popularTweets))
-        console.log(popularTweets.statuses.length)
-      // }
+      var filterFlag = false;
+
+      if(popularTweets.statuses.length < 10) {
+        console.log("No 'popular' tweets returned by query: " + query)
+        twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
+          console.log("Total Tweets: " + allTweets.length);
+          var finalList = twitterFilter.primaryFilter(allTweets);
+          filterFlag = false;
+          resolve(structureAndFilterTweets(finalList, filterFlag));
+        });
+      } 
+      else {
+        console.log("There were " + popularTweets.statuses.length + " 'popular' tweets returned by query: " + query)
+        resolve(structureAndFilterTweets(popularTweets.statuses, filterFlag))
+      }
     });
   });
+
+}
+
+//This function can be used to paginate through Twitter API results
+function twitterPage(query, page, callCount, storedTweets, callback) {
+  var stackCount = callCount + 1;
+  client.get('search/tweets.json' + page, {}, function(error, tweets, response){
+    //Stored Tweets from call in array
+    var callCumulativeTweets = storedTweets.concat(tweets.statuses);
+
+    //Get the next page
+    if('next_results' in tweets.search_metadata) {
+          var nextPage = tweets.search_metadata.next_results;
+    }
+    else {
+      callback(callCumulativeTweets)
+      return;
+    }
+    console.log("Page Call Count: " + stackCount + ". Next Page: " + nextPage);
+
+    if ((callCount < 10) && typeof(nextPage) != 'undefined') {
+      twitterPage(query, nextPage, stackCount, callCumulativeTweets, callback)
+    }
+    else {
+      callback(callCumulativeTweets)
+    }
+  });
+}
+
+
+function structureInstagramMedia(medias) {
+  //Store an array of TL event for each media returned by IG
+  var mediaObjects = []
+
+  for (var i = 0; i < medias.length; i++) {
+    var media = medias[i];
+    var instagramDate = moment(new Date(media.created_time * 1000));
+
+    //Create a TL event for each media
+    var mediaObject = {
+      "media": {
+          "url": media.images.standard_resolution.url,
+          "caption": media.internalTag,
+          "credit": "@" + media.user.username,
+          "thumb": media.images.standard_resolution.url
+        },
+        "start_date": {
+          "month": instagramDate.format("MM"),
+          "day": instagramDate.format("DD"),
+          "year": instagramDate.format("YYYY"),
+          "hour": instagramDate.format("HH"),
+          "minute": instagramDate.format("mm"),
+          "second": instagramDate.format("ss")
+        },
+        "text": {
+          "headline": "",
+          "text": "<p>" + media.caption.text + "</p>"
+        }
+    }
+
+    mediaObjects.push(mediaObject);
+  }
+  console.log("Media Objects: " + mediaObjects.length)
+  return mediaObjects;
 }
 
 //This function gathers and process media from Instagram
 function getInstagramData(query) {
   return new Promise(function(resolve, reject) {
-    ig.tag_media_recent(query, function(err, medias, pagination, remaining, limit) {
-    
-      //Store an array of TL event for each media returned by IG
-      var mediaObjects = []
+    var allMedia = []
 
-      for (var i = 0; i < medias.length; i++) {
-        var media = medias[i];
-        var instagramDate = moment(new Date(media.created_time * 1000));
+    //Set a variable to represent a week ago
+    var aboutAWeekAgo = moment().subtract(7, 'days');
 
-        //Create a TL event for each media
-        var mediaObject = {
-          "media": {
-              "url": media.images.standard_resolution.url,
-              "caption": media.internalTag,
-              "credit": "@" + media.user.username,
-              "thumb": media.images.standard_resolution.url
-            },
-            "start_date": {
-              "month": instagramDate.format("MM"),
-              "day": instagramDate.format("DD"),
-              "year": instagramDate.format("YYYY"),
-              "hour": instagramDate.format("HH"),
-              "minute": instagramDate.format("mm"),
-              "second": instagramDate.format("ss")
-            },
-            "text": {
-              "headline": "",
-              "text": "<p>" + media.caption.text + "</p>"
-            }
+    var instagramPage = function(err, result, pagination, remaining, limit) {
+
+      if(result.length != 0) {
+        //Only add media to the list if it is within the last week
+        if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
+          // console.log("Media is within a week old")
+          // console.log(moment(result[0].created_time *1000).calendar())
+          allMedia = allMedia.concat(result)
+          if(pagination.next) {        
+            pagination.next(instagramPage); // Will get second page results
+          }
+        }
+        else {
+          console.log("Media is too old")
+          
+          //Filter the array one last time to ensure that the media
+          //is within the last week
+          if(allMedia.length > 0) {
+            var weekMedia = allMedia.filter(function(media) {
+              return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
+            });
+
+            //Run the media through the filter
+            var filteredMedia = instaFilter.primaryFilter(weekMedia);
+
+            resolve(structureInstagramMedia(filteredMedia))
+          }
+          else {
+            console.log("No media is considered, so we need to resolve with no data.")
+            console.log("All Media: " + allMedia.length)
+            resolve(allMedia)
+          }
         }
 
-        mediaObjects.push(mediaObject);
-      }
+      };
+    }
 
-      resolve(mediaObjects)
-    });
+    //Call paginating API call
+    ig.tag_media_recent(query, instagramPage);
+
   });
+
 }
 
 // This will be the central function for hitting
