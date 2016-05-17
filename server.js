@@ -170,15 +170,14 @@ function getInstagramData(query) {
 
     //Set a variable to represent a week ago
     var aboutAWeekAgo = moment().subtract(7, 'days');
-    console.log(aboutAWeekAgo.calendar())
 
     var instagramPage = function(err, result, pagination, remaining, limit) {
 
       if(result.length != 0) {
         //Only add media to the list if it is within the last week
         if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
-          console.log("Media is within a week old")
-          console.log(moment(result[0].created_time *1000).calendar())
+          // console.log("Media is within a week old")
+          // console.log(moment(result[0].created_time *1000).calendar())
           allMedia = allMedia.concat(result)
           if(pagination.next) {        
             pagination.next(instagramPage); // Will get second page results

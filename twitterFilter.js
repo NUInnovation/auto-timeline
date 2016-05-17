@@ -43,7 +43,10 @@ function primaryFilter(tweets) {
 		var largeScores = Heap.nlargest(unique(scoresList), tweetsPerSect);
 		//Push those tweets into the final list
 		for (var i=0; i < tweetsPerSect; i++){
-		    finalList.push(hashtable.get(largeScores[i]))
+			if (largeScores[i]) {
+				finalList.push(hashtable.get(largeScores[i]))
+			}
+		    
 		}
 	}
 
