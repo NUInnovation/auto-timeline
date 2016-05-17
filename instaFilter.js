@@ -4,6 +4,8 @@ require('moment-range');
 var Heap = require('heap');
 var HashTable = require('hashtable');
 
+var LanguageDetect = require('languagedetect');
+var lngDetector = new LanguageDetect();
 
 function primaryFilter(medias) {
 	//Do a date range filtering on the content
@@ -148,10 +150,30 @@ function unique(xs) {
 
 function evaluate(insta){
 	var weight = 0;
-	weight += insta.likes.count;
-	weight += insta.comments.count;
-	weight += insta.likes.count;
-	weight += insta.comments.count;
+
+	var instaText = insta.caption.text;
+	console.log(instaText);
+	if(instaText != '' && instaText != null) {
+		var likelyLangs = lngDetector.detect(instaText);
+		if(likelyLangs && likelyLangs.length > 0) {
+			console.log(likelyLangs[0])
+			if(likelyLangs[0][0]) {
+				if (likelyLangs[0][0] == "english") {
+					weight += insta.likes.count;
+					weight += insta.comments.count;
+					weight += insta.likes.count;
+					weight += insta.comments.count;
+				}
+			}
+		}
+	}
+	else {
+		weight += insta.likes.count;
+		weight += insta.comments.count;
+		weight += insta.likes.count;
+		weight += insta.comments.count;
+	}
+	
 	return weight;
 
 }
