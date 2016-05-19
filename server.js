@@ -8,6 +8,11 @@ var moment = require('moment');
 var Heap = require('heap');
 var HashTable = require('hashtable');
 
+//Mongoose DB Requirements
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://root:root@ds025752.mlab.com:25752/autotimeline');
+
+
 var twitterFilter = require("./twitterFilter.js");
 var instaFilter = require("./instaFilter.js");
 
@@ -22,6 +27,34 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+
+//Database Setup
+var Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId
+
+var timelineSchema = new Schema({
+    query: String,
+    created: Date,
+    media: {
+      url: String,
+      credit: String,
+    },
+    start_date: {
+      month: String,
+      day: String,
+      year: String,
+      hour: String,
+      minute: String,
+      second: String
+    },
+    text: {
+      headline: String,
+      text: String
+    }
+});
+
+var Timeline = mongoose.model('Timeline', timelineSchema);
 
 //Twitter API Setup
 var client = new Twitter({
@@ -218,6 +251,38 @@ function getInstagramData(query) {
 
 }
 
+function save(date, query, resultsJSON) {
+  for (var i = 0; i < resultsJSON.length; i++) {
+    var item = resultsJSON[i];
+
+    var t = new Timeline({ 
+      query: query,
+      created: date,
+      media: {
+        url: item.media.url,
+        credit: item.media.credit,
+      },
+      start_date: {
+        month: item.start_date.month,
+        day: item.start_date.day,
+        year: item.start_date.year,
+        hour: item.start_date.hour,
+        minute: item.start_date.minute,
+        second: item.start_date.second
+      },
+      text: {
+        headline: item.text.headline,
+        text: item.text.text
+      } 
+    });
+
+    t.save(function(err) {
+      if (err) throw err;
+      console.log('Timeline saved successfully!');
+    });
+  }
+}
+
 // This will be the central function for hitting
 // each of the different platform APIs and compiling
 // the data into a coherent response to send back to
@@ -248,7 +313,8 @@ app.get('/create', function(req, res) {
   // This is the endpoint an AJAX call will hit to get data.
   var query = req.query.query;
   compileData(query, function(resultsJSON) {
-    res.send(resultsJSON)
+    save(new Date(), query, resultsJSON);
+    res.send(resultsJSON);
   });
 });
 
