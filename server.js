@@ -245,9 +245,9 @@ function save(date, query, resultsJSON) {
     data: resultsJSON
   });
 
-  t.save(function(err) {
+  t.save(function(err, timeline) {
     if (err) throw err;
-    console.log('Timeline saved successfully!');
+    console.log('Timeline saved successfully! ID:' + timeline.id);
   });
 }
 
@@ -283,6 +283,17 @@ app.get('/create', function(req, res) {
   compileData(query, function(resultsJSON) {
     save(new Date(), query, resultsJSON);
     res.send(resultsJSON);
+  });
+});
+
+app.get("/timeline/:id", function(req, res) {
+  var id = req.params.id;
+  Timeline.findById(id, function(err, tl) {
+    if (err) { 
+      console.log(err)
+    } else if (tl) {
+      res.send(tl.data);
+    }
   });
 });
 
