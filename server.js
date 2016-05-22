@@ -36,7 +36,7 @@ var Schema = mongoose.Schema,
 var timelineSchema = new Schema({
     query: String,
     created: Date,
-    data: []
+    data: Object
 });
 
 var Timeline = mongoose.model('Timeline', timelineSchema);
@@ -273,6 +273,10 @@ app.get('/', function(req, res) {
   res.render('home.html');
 });
 
+app.get('/timeline/:id', function(req, res) {
+  res.render('timeline-template.html');
+});
+
 app.get('/test', function(req, res) {
   res.render('timeline-test.html');
 });
@@ -286,8 +290,9 @@ app.get('/create', function(req, res) {
   });
 });
 
-app.get("/timeline/:id", function(req, res) {
+app.get("/load/:id", function(req, res) {
   var id = req.params.id;
+  console.log('Load endpoint hit for ID: ' + id)
   Timeline.findById(id, function(err, tl) {
     if (err) { 
       console.log(err)
