@@ -36,22 +36,7 @@ var Schema = mongoose.Schema,
 var timelineSchema = new Schema({
     query: String,
     created: Date,
-    media: {
-      url: String,
-      credit: String,
-    },
-    start_date: {
-      month: String,
-      day: String,
-      year: String,
-      hour: String,
-      minute: String,
-      second: String
-    },
-    text: {
-      headline: String,
-      text: String
-    }
+    data: []
 });
 
 var Timeline = mongoose.model('Timeline', timelineSchema);
@@ -252,35 +237,18 @@ function getInstagramData(query) {
 }
 
 function save(date, query, resultsJSON) {
-  for (var i = 0; i < resultsJSON.length; i++) {
-    var item = resultsJSON[i];
+  console.log("Save function called")
 
-    var t = new Timeline({ 
-      query: query,
-      created: date,
-      media: {
-        url: item.media.url,
-        credit: item.media.credit,
-      },
-      start_date: {
-        month: item.start_date.month,
-        day: item.start_date.day,
-        year: item.start_date.year,
-        hour: item.start_date.hour,
-        minute: item.start_date.minute,
-        second: item.start_date.second
-      },
-      text: {
-        headline: item.text.headline,
-        text: item.text.text
-      } 
-    });
+  var t = new Timeline({ 
+    query: query,
+    created: date,
+    data: resultsJSON
+  });
 
-    t.save(function(err) {
-      if (err) throw err;
-      console.log('Timeline saved successfully!');
-    });
-  }
+  t.save(function(err) {
+    if (err) throw err;
+    console.log('Timeline saved successfully!');
+  });
 }
 
 // This will be the central function for hitting
