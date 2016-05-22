@@ -248,7 +248,9 @@ function save(date, query, resultsJSON) {
   t.save(function(err, timeline) {
     if (err) throw err;
     console.log('Timeline saved successfully! ID:' + timeline.id);
+    return timeline.id;
   });
+  return null;
 }
 
 // This will be the central function for hitting
@@ -285,8 +287,13 @@ app.get('/create', function(req, res) {
   // This is the endpoint an AJAX call will hit to get data.
   var query = req.query.query;
   compileData(query, function(resultsJSON) {
-    save(new Date(), query, resultsJSON);
-    res.send(resultsJSON);
+    var id = save(new Date(), query, resultsJSON);
+    var returnJSON = {
+      query: query,
+      id: id,
+      data: resultsJSON
+    }
+    res.send(returnJSON);
   });
 });
 
