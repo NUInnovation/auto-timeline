@@ -168,6 +168,7 @@ body{
 
 #urlbox{
   overflow: auto;
+  display: none;
 }
 
 #copy{
@@ -184,17 +185,17 @@ body{
 
 #url{
   letter-spacing: .5px;
-  border: 1px #ffb000 solid;
+  border: 2px #ffb000 solid;
   color:#333;
   font-family: 'lora', sans-serif;
-  padding: 9px 20px;
+  padding: 8px 20px;
   font-size: 1.2em;
   width: 60%;
   float: left;
   background-color: #fdfdfd;
 }
 
-#newtab{
+#openNew{
   text-align: center;
   color: #fdfdfd;
   background-color: #333;
