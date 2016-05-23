@@ -20,27 +20,41 @@
         margin: 0px;
       }
       .tl-timeline {
-      
+
       }
-      
+
     </style>
     <!-- HTML5 shim, for IE6-8 support of HTML elements-->
     <!--if lt IE 9
     script(src='https://html5shim.googlecode.com/svn/trunk/html5.js')
-    
+
     -->
   </head>
   <body>
     <div id="timeline"></div>
+    <p>
+      Copy the timeline URL
+    </p>
+    <p id='url'>
+
+    </p>
+
+    <div id="d_clip_button" style="border:1px solid black; padding:20px;">Copy To Clipboard</div>
+    
     <!-- JavaScript-->
     <script src="../js/timeline.js"></script>
     <script>
+      var Id = '';
       $.get( "/create?query=chi2016", function( res ) {
-        var data = res.data;
+        data = res.data;
+        console.log(res.id);
+        Id = "asdasdfa";
         var timeline = new TL.Timeline('timeline', data, {
           ga_property_id: "UA-27829802-4"
         });
       });
+      $('#url').html(window.location.hostname + '/timeline/' + Id);
+
     </script>
   </body>
 </html>
