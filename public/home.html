@@ -126,8 +126,8 @@
   <script type="text/javascript">
 
   var generate = function(){
-    $("#timeline-header").html('');
-    $('#timeline-header').show();
+    // $("#timeline-header").html('');
+    // $('#timeline-header').show();
     var tag = $('#at-input').val();
     tag = tag.split("");
     if(tag[0] == '#'){
@@ -142,17 +142,7 @@
     temp = localStorage.getItem("hashtag");
     console.log(temp);
 
-    var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-      ga_property_id: "UA-27829802-4"
-    });
-    console.log('refreshed timeline');
-    $('.ex-wrapper').hide();
-    $("#timeline-header").append("<div id='t-header' >Timeline For <span>#" + tag + "</span></div>");
-    $("#timeline-header").append("<div id='openNew'>Open in New Tab</div>");
-    $('#openNew').click(function(){
-      window.open('timeline.html');
-    });
-    $("html,body").animate({ scrollTop: "700px"},1200);
+    createTimeline(tag)
   };
 
   $('#at-btn').click(function(){
@@ -165,47 +155,20 @@
     }
   });
 
-        $('#Example1').click(function() {
-        $("#timeline-header").html('');
-        $('#timeline-header').show();
-        var tag = 'HackDisrupt'
+  $('#Example1').click(function() {
+    var tag = 'HackDisrupt'
+    createTimeline(tag)
+  });
 
-        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-          ga_property_id: "UA-27829802-4"
-        });
-        console.log('refreshed timeline');
-        $('.ex-wrapper').hide();
-        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
-        $("html,body").animate({ scrollTop: "700px"},500);
-      });
+  $('#Example2').click(function() {
+    var tag = 'ImWithHer'
+    createTimeline(tag)
+  });
 
-      $('#Example2').click(function() {
-        $("#timeline-header").html('');
-        $('#timeline-header').show();
-        var tag = 'ImWithHer'
-
-        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-          ga_property_id: "UA-27829802-4"
-        });
-        console.log('refreshed timeline');
-        $('.ex-wrapper').hide();
-        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
-        $("html,body").animate({ scrollTop: "700px"},500);
-      });
-
-      $('#Example3').click(function() {
-        $("#timeline-header").html('');
-        $('#timeline-header').show();
-        var tag = 'MothersDay'
-
-        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-          ga_property_id: "UA-27829802-4"
-        });
-        console.log('refreshed timeline');
-        $('.ex-wrapper').hide();
-        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
-        $("html,body").animate({ scrollTop: "700px"},500);
-      });
+  $('#Example3').click(function() {
+    var tag = 'MothersDay'
+    createTimeline(tag)
+  });
 
 
   </script>
