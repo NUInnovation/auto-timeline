@@ -20,28 +20,32 @@
         margin: 0px;
       }
       .tl-timeline {
-      
+
       }
-      
+
     </style>
     <!-- HTML5 shim, for IE6-8 support of HTML elements-->
     <!--if lt IE 9
     script(src='https://html5shim.googlecode.com/svn/trunk/html5.js')
-    
+
     -->
   </head>
   <body>
-    <div id="timeline"></div>
+
     <!-- JavaScript-->
     <script src="../js/timeline.js"></script>
     <script>
-      var path = window.location.pathname
-      var pathArray = path.split("/");
-      var id = pathArray[pathArray.length-1];
-      console.log(id)
-      var timeline = new TL.Timeline('timeline', '/load/' + id, {
-        ga_property_id: "UA-27829802-4"
+      $(document).ready(function(){
+        var path = window.location.pathname;
+        var pathArray = path.split("/");
+        var id = pathArray[pathArray.length-1];
+        console.log(id);
+        $('body').append('<div id="timeline"></div>');
+        var timeline = new TL.Timeline('timeline', '/load/' + id, {
+          ga_property_id: "UA-27829802-4"
+        });
       });
+
     </script>
   </body>
 </html>
