@@ -184,11 +184,12 @@ body{
 }
 
 #url{
+padding: .5px 0px;
+  margin: 0px;
+  border-color: #ffb000;
   letter-spacing: .5px;
-  border: 2px #ffb000 solid;
   color:#333;
   font-family: 'lora', sans-serif;
-  padding: 8px 20px;
   font-size: 1.2em;
   width: 60%;
   float: left;
