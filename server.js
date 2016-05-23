@@ -287,10 +287,12 @@ app.get('/create', function(req, res) {
   // This is the endpoint an AJAX call will hit to get data.
   var query = req.query.query;
   compileData(query, function(resultsJSON) {
-    var id = save(new Date(), query, resultsJSON);
+    var currentDate = new Date();
+    var id = save(currentDate, query, resultsJSON);
     var returnJSON = {
       query: query,
       id: id,
+      date: currentDate,
       data: resultsJSON
     }
     res.send(returnJSON);
