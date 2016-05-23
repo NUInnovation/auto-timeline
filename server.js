@@ -236,7 +236,7 @@ function getInstagramData(query) {
 
 }
 
-function save(date, query, resultsJSON) {
+function save(date, query, resultsJSON, callback) {
   console.log("Save function called")
 
   var t = new Timeline({ 
@@ -246,11 +246,13 @@ function save(date, query, resultsJSON) {
   });
 
   t.save(function(err, timeline) {
-    if (err) throw err;
+    if (err) {
+      throw err;
+      callback(null)
+    }
     console.log('Timeline saved successfully! ID:' + timeline.id);
-    return timeline.id;
+    callback(timeline.id);
   });
-  return null;
 }
 
 // This will be the central function for hitting
@@ -286,16 +288,19 @@ app.get('/test', function(req, res) {
 app.get('/create', function(req, res) {
   // This is the endpoint an AJAX call will hit to get data.
   var query = req.query.query;
+
   compileData(query, function(resultsJSON) {
     var currentDate = new Date();
-    var id = save(currentDate, query, resultsJSON);
-    var returnJSON = {
-      query: query,
-      id: id,
-      date: currentDate,
-      data: resultsJSON
-    }
-    res.send(returnJSON);
+    save(currentDate, query, resultsJSON, function(id) {
+      console.log("ID Returned in Create: " + id);
+      var returnJSON = {
+        query: query,
+        id: id,
+        date: currentDate,
+        data: resultsJSON
+      };
+      res.send(returnJSON);
+    });
   });
 });
 
