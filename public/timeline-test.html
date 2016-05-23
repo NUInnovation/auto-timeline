@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="../css/timeline.css?v1">
     <!--FONT-->
     <link rel="stylesheet" href="../css/fonts/font.default.css?v1">
+
+    <script src="dist/clipboard.min.js"></script>
     <!-- Style-->
     <style>
       html, body {
@@ -35,9 +37,22 @@
     <p>
       Copy the timeline URL
     </p>
-    <div id='url'>
+    <div id='url'><!-- Target -->
+<!-- <input id="url" value="https://github.com/zenorocha/clipboard.js.git"> -->
+<!-- <input id="url"> -->
+<!-- Trigger -->
+<!-- Trigger -->
 
     </div>
+<div>
+    <!-- Target -->
+<input id="foo" value="https://github.com/zenorocha/clipboard.js.git">
+
+<!-- Trigger -->
+<button class="btn" data-clipboard-target="#foo">
+    <img src="assets/clippy.svg" alt="Copy to clipboard">
+</button>
+</div>
 
     <div id="d_clip_button" style="border:1px solid black; padding:20px;">Copy To Clipboard</div>
 
@@ -45,16 +60,23 @@
     <script src="../js/timeline.js"></script>
     <script>
       var Id = '';
+      new Clipboard('.btn');
+
       $.get( "/create?query=chi2016", function( res ) {
         data = res.data;
         console.log(res.id);
-        Id = "asdasdfa";
+        // Id = "asdasdfa";
+        Id = res.id;
         var timeline = new TL.Timeline('timeline', data, {
           ga_property_id: "UA-27829802-4"
         });
       });
       $('#url').html(window.location.hostname + '/timeline/' + Id);
 
+
     </script>
+
+
+
   </body>
 </html>
