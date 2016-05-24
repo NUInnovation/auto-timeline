@@ -188,20 +188,41 @@ function structureInstagramMedia(medias) {
 function getInstagramData(query) {
   return new Promise(function(resolve, reject) {
     var allMedia = []
+    console.log("Getting Instagram Data");
 
     //Set a variable to represent a week ago
     var aboutAWeekAgo = moment().subtract(7, 'days');
 
     var instagramPage = function(err, result, pagination, remaining, limit) {
 
-      if(result.length != 0) {
+      // if(result.length != 0) {
         //Only add media to the list if it is within the last week
         if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
           // console.log("Media is within a week old")
           // console.log(moment(result[0].created_time *1000).calendar())
           allMedia = allMedia.concat(result)
-          if(pagination.next) {        
+          if(pagination.next) {    
+            console.log(allMedia.length)    
             pagination.next(instagramPage); // Will get second page results
+          }
+          else {
+            //Filter the array one last time to ensure that the media
+            //is within the last week
+            if(allMedia.length > 0) {
+              var weekMedia = allMedia.filter(function(media) {
+                return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
+              });
+
+              //Run the media through the filter
+              var filteredMedia = instaFilter.primaryFilter(weekMedia);
+
+              resolve(structureInstagramMedia(filteredMedia))
+            }
+            else {
+              console.log("No media is considered, so we need to resolve with no data.")
+              console.log("All Media: " + allMedia.length)
+              resolve(allMedia)
+            }
           }
         }
         else {
@@ -227,7 +248,7 @@ function getInstagramData(query) {
         }
 
       };
-    }
+    // }
 
     //Call paginating API call
     ig.tag_media_recent(query, instagramPage);
