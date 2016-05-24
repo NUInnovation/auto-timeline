@@ -47,15 +47,17 @@
     </div>
 
     <div id="urlbox">
-      <div id="copy">
-        Copy the URL here
-      </div>
-      <input id="url">
-
-    </input>
-      <a target="_blank" id="openNew">
+          <a target="_blank" id="openNew" style="background-color:black; ">
         Open in new tab
       </a>
+
+
+      <input id="url" value="https:">  </input>
+
+      <div class="btn" data-clipboard-target="#url" style="background-color:black; height: 47px; width: 256px">
+        Copy the URL here
+      </div>
+
     </div>
     <div id="timeline-header"></div>
 
@@ -105,7 +107,7 @@
           </div>
         </div>
 
-
+        <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.10/clipboard.min.js"></script>
         <script src="../js/timeline.js"></script>
         <script src="../js/app.js"></script>
 
@@ -125,7 +127,13 @@
 -->
 
   <script type="text/javascript">
-
+    var clipboard = new Clipboard('.btn');
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
   var generate = function(){
     // $("#timeline-header").html('');
     // $('#timeline-header').show();

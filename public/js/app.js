@@ -3,13 +3,14 @@ function createTimeline(query) {
     $('.ex-wrapper').hide();
     $.get( "/create?query=" + query, function( res ) {
       data = res.data;
-      if(window.location.hostname == 'localhost'){
-        url = 'localhost:3000/timeline/' + res.id;
-        $('#url').html(url);
-      }else{
-        url = window.location.hostname + '/timeline/' + res.id;
-        $('#url').html(url);
-      }
+      // if(window.location.hostname == 'localhost'){
+      //   url = 'localhost:3000/timeline/' + res.id;
+      //   $('#url').html(url);
+      // }else{
+      //   url = window.location.hostname + '/timeline/' + res.id;
+      //   $('#url').html(url);
+      // }
+      $('#url').val("  "+window.location.hostname + ":3000" + '/timeline/' + res.id);
 
       $("#openNew").attr('href', url);
 
