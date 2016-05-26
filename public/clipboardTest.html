@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Timeline Tester</title>
+    <meta charset="utf-8">
+
+    <!-- <script src="dist/clipboard.min.js"></script> -->
+
+<!--       <script>
+    new Clipboard('.btn');
+  </script> -->
+  </head>
+  <body>
+
+    <!-- 1. Define some markup -->
+    <div>
+
+    <!-- Target -->
+<input id="foo" value="https://github.com/zenorocha/clipboard.js.git">
+
+<!-- Trigger -->
+<button class="btn" data-clipboard-target="#foo">
+    <!-- <img src="assets/clippy.svg" alt="Copy to clipboard"> -->
+    <img src="src/clippy.png" alt="Copy to clipboard" style="height:12px; width:12px; ">
+</button>
+
+    </div>
+
+    <!-- 2. Include library -->
+    <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+    <!-- 3. Instantiate clipboard by passing a HTML element -->
+    <script>
+    var clipboard = new Clipboard('.btn');
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+  </body>
+</html>

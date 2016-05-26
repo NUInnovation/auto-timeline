@@ -165,3 +165,44 @@ body{
 #openNew:hover{
   cursor:pointer;
 }
+
+#urlbox{
+  overflow: auto;
+  display: none;
+}
+
+#copy{
+  text-align: center;
+  background-color: #333;
+  float: left;
+  width: 20%;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  color:#ffb000;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
+
+#url{
+  letter-spacing: .5px;
+  border: 2px #ffb000 solid;
+  color:#333;
+  font-family: 'lora', sans-serif;
+  padding: 8px 20px;
+  font-size: 1.2em;
+  width: 60%;
+  float: left;
+  background-color: #fdfdfd;
+}
+
+#openNew{
+  text-align: center;
+  color: #fdfdfd;
+  background-color: #333;
+  width: 20%;
+  float: left;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+  padding: 10px 20px;
+  font-size: 1.2em;
+}

@@ -10,7 +10,7 @@ var lngDetector = new LanguageDetect();
 function primaryFilter(medias) {
 	//Do a date range filtering on the content
 	var dateFilteredMedia = dateFilter(medias)
-	console.log("Date Filtered Length: " + dateFilteredMedia.length);
+	console.log("Date Filtered Media Length: " + dateFilteredMedia.length);
 	var daysCount = 0;
 
 	//Find counts of tweets per day

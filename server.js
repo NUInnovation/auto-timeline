@@ -8,6 +8,11 @@ var moment = require('moment');
 var Heap = require('heap');
 var HashTable = require('hashtable');
 
+//Mongoose DB Requirements
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://root:root@ds025752.mlab.com:25752/autotimeline');
+
+
 var twitterFilter = require("./twitterFilter.js");
 var instaFilter = require("./instaFilter.js");
 
@@ -22,6 +27,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+
+//Database Setup
+var Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId
+
+var timelineSchema = new Schema({
+    query: String,
+    created: Date,
+    data: Object
+});
+
+var Timeline = mongoose.model('Timeline', timelineSchema);
 
 //Twitter API Setup
 var client = new Twitter({
@@ -170,20 +188,41 @@ function structureInstagramMedia(medias) {
 function getInstagramData(query) {
   return new Promise(function(resolve, reject) {
     var allMedia = []
+    console.log("Getting Instagram Data");
 
     //Set a variable to represent a week ago
     var aboutAWeekAgo = moment().subtract(7, 'days');
 
     var instagramPage = function(err, result, pagination, remaining, limit) {
 
-      if(result.length != 0) {
+      // if(result.length != 0) {
         //Only add media to the list if it is within the last week
         if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
           // console.log("Media is within a week old")
           // console.log(moment(result[0].created_time *1000).calendar())
           allMedia = allMedia.concat(result)
-          if(pagination.next) {        
+          if(pagination.next) {    
+            console.log(allMedia.length)    
             pagination.next(instagramPage); // Will get second page results
+          }
+          else {
+            //Filter the array one last time to ensure that the media
+            //is within the last week
+            if(allMedia.length > 0) {
+              var weekMedia = allMedia.filter(function(media) {
+                return aboutAWeekAgo.isBefore(moment(media.created_time *1000));
+              });
+
+              //Run the media through the filter
+              var filteredMedia = instaFilter.primaryFilter(weekMedia);
+
+              resolve(structureInstagramMedia(filteredMedia))
+            }
+            else {
+              console.log("No media is considered, so we need to resolve with no data.")
+              console.log("All Media: " + allMedia.length)
+              resolve(allMedia)
+            }
           }
         }
         else {
@@ -209,13 +248,32 @@ function getInstagramData(query) {
         }
 
       };
-    }
+    // }
 
     //Call paginating API call
     ig.tag_media_recent(query, instagramPage);
 
   });
 
+}
+
+function save(date, query, resultsJSON, callback) {
+  console.log("Save function called")
+
+  var t = new Timeline({ 
+    query: query,
+    created: date,
+    data: resultsJSON
+  });
+
+  t.save(function(err, timeline) {
+    if (err) {
+      throw err;
+      callback(null)
+    }
+    console.log('Timeline saved successfully! ID:' + timeline.id);
+    callback(timeline.id);
+  });
 }
 
 // This will be the central function for hitting
@@ -240,6 +298,10 @@ app.get('/', function(req, res) {
   res.render('home.html');
 });
 
+app.get('/timeline/:id', function(req, res) {
+  res.render('timeline-template.html');
+});
+
 app.get('/test', function(req, res) {
   res.render('timeline-test.html');
 });
@@ -247,8 +309,31 @@ app.get('/test', function(req, res) {
 app.get('/create', function(req, res) {
   // This is the endpoint an AJAX call will hit to get data.
   var query = req.query.query;
+
   compileData(query, function(resultsJSON) {
-    res.send(resultsJSON)
+    var currentDate = new Date();
+    save(currentDate, query, resultsJSON, function(id) {
+      console.log("ID Returned in Create: " + id);
+      var returnJSON = {
+        query: query,
+        id: id,
+        date: currentDate,
+        data: resultsJSON
+      };
+      res.send(returnJSON);
+    });
+  });
+});
+
+app.get("/load/:id", function(req, res) {
+  var id = req.params.id;
+  console.log('Load endpoint hit for ID: ' + id)
+  Timeline.findById(id, function(err, tl) {
+    if (err) { 
+      console.log(err)
+    } else if (tl) {
+      res.send(tl.data);
+    }
   });
 });
 

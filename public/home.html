@@ -46,9 +46,21 @@
       </div>
     </div>
 
-    <div id="timeline-header">
+    <div id="urlbox">
+      <div id="copy">
+        Copy the URL here
+      </div>
+      <div id="url">
 
+      </div>
+      <a target="_blank" id="openNew">
+        Open in new tab
+      </a>
     </div>
+    <div id="timeline-header"></div>
+
+
+
     <div id="timeline"></div>
 
     <div class="ex-wrapper">
@@ -61,32 +73,32 @@
             <div class="col s3">
               <div class="card">
                 <div class="card-image">
-                  <img src="src/hackdisrupt.png">
+                  <img src="/src/preakness.png">
                 </div>
 
                 <div class="card-action">
-                  <a href="#" id="Example1">#HackDisrupt</a>
+                  <a href="#" id="Example1">#Preakness</a>
                 </div>
               </div>
             </div>
             <div class="col s3  offset-s1 ">
               <div class="card">
                 <div class="card-image">
-                  <img src="src/imwithher.png">
+                  <img src="/src/BBMAs.png">
                 </div>
 
                 <div class="card-action">
-                  <a href="#" id="Example2">#ImWithHer</a>
+                  <a href="#" id="Example2">#BBMAs</a>
                 </div>
               </div>
             </div>
             <div class="col s3  offset-s1  ">
               <div class="card">
                 <div class="card-image">
-                  <img src="src/mothersday.png">
+                  <img src="/src/GSWvsOKC.png">
                 </div>
                 <div class="card-action">
-                  <a href="#" id="Example3">#MothersDay</a>
+                  <a href="#" id="Example3">#GSWvsOKC</a>
                 </div>
               </div>
             </div>
@@ -115,8 +127,8 @@
   <script type="text/javascript">
 
   var generate = function(){
-    $("#timeline-header").html('');
-    $('#timeline-header').show();
+    // $("#timeline-header").html('');
+    // $('#timeline-header').show();
     var tag = $('#at-input').val();
     tag = tag.split("");
     if(tag[0] == '#'){
@@ -131,18 +143,7 @@
     temp = localStorage.getItem("hashtag");
     console.log(temp);
 
-    var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-      ga_property_id: "UA-27829802-4"
-    });
-    console.log('refreshed timeline');
-    $('.ex-wrapper').hide();
-    $("#timeline-header").append("<div id='t-header' >Timeline For <span>#" + tag + "</span></div>");
-    $("#timeline-header").append("<div id='openNew'>Open in New Tab</div>");
-    $("#timeline-header").append("<div id='openNew'>Copy Timeline Link to Clipboard</div>");
-    $('#openNew').click(function(){
-      window.open('timeline.html');
-    });
-    $("html,body").animate({ scrollTop: "700px"},1200);
+    createTimeline(tag)
   };
 
   $('#at-btn').click(function(){
@@ -155,47 +156,20 @@
     }
   });
 
-        $('#Example1').click(function() {
-        $("#timeline-header").html('');
-        $('#timeline-header').show();
-        var tag = 'HackDisrupt'
+  $('#Example1').click(function() {
+    var tag = 'HackDisrupt'
+    createTimeline(tag)
+  });
 
-        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-          ga_property_id: "UA-27829802-4"
-        });
-        console.log('refreshed timeline');
-        $('.ex-wrapper').hide();
-        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
-        $("html,body").animate({ scrollTop: "700px"},500);
-      });
+  $('#Example2').click(function() {
+    var tag = 'ImWithHer'
+    createTimeline(tag)
+  });
 
-      $('#Example2').click(function() {
-        $("#timeline-header").html('');
-        $('#timeline-header').show();
-        var tag = 'ImWithHer'
-
-        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-          ga_property_id: "UA-27829802-4"
-        });
-        console.log('refreshed timeline');
-        $('.ex-wrapper').hide();
-        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
-        $("html,body").animate({ scrollTop: "700px"},500);
-      });
-
-      $('#Example3').click(function() {
-        $("#timeline-header").html('');
-        $('#timeline-header').show();
-        var tag = 'MothersDay'
-
-        var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-          ga_property_id: "UA-27829802-4"
-        });
-        console.log('refreshed timeline');
-        $('.ex-wrapper').hide();
-        $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
-        $("html,body").animate({ scrollTop: "700px"},500);
-      });
+  $('#Example3').click(function() {
+    var tag = 'MothersDay'
+    createTimeline(tag)
+  });
 
 
   </script>

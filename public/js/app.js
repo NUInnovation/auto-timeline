@@ -1,25 +1,33 @@
-/*
-var generate = function(){
-  $("#timeline-header").html('');
-  $('#timeline-header').show();
-  var tag = $('#at-input').val();
-  tag = tag.substring(1);
+var url;
+function createTimeline(query) {
+    $('.ex-wrapper').hide();
+    $.get( "/create?query=" + query, function( res ) {
+      data = res.data;
+      if(window.location.hostname == 'localhost'){
+        url = 'localhost:3000/timeline/' + res.id;
+        $('#url').html(url);
+      }else{
+        url = window.location.hostname + '/timeline/' + res.id;
+        $('#url').html(url);
+      }
 
-  var timeline = new TL.Timeline('timeline', '/create?query=' + tag, {
-    ga_property_id: "UA-27829802-4"
-  });
-  console.log('refreshed timeline');
-  $('.ex-wrapper').hide();
-  $("#timeline-header").append("<div>Timeline For <span>#" + tag + "</span></div>");
-  $("html,body").animate({ scrollTop: "700px"},1200);
-};
+      $("#openNew").attr('href', url);
 
-$('#at-btn').click(function(){
-  generate();
-});
+      var timeline = new TL.Timeline('timeline', data, {
+        ga_property_id: "UA-27829802-4"
+      });
 
-$(document).keypress(function(e){
-  if(e.which == 13) {
-    generate();
-  }
-});
+      $('.ex-wrapper').hide();
+      $("#timeline-header").html('');
+      $('#timeline-header').show();
+      $("#timeline-header").append("<div id='t-header' >Timeline For <span>#" + query + "</span></div>");
+
+      $("html,body").animate({ scrollTop: "700px"},1200);
+      $('#urlbox').show();
+    });
+}
+//
+// $('#openNew').click(function(){
+//   // window.open(url);
+//
+// });
