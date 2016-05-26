@@ -22,7 +22,7 @@ function createTimeline(query) {
       $('#timeline-header').show();
       $("#timeline-header").append("<div id='t-header' >Timeline For <span>#" + query + "</span></div>");
 
-      $("html,body").animate({ scrollTop: "700px"},1200);
+      $("html,body").animate({ scrollTop: "640px"},1200);
       $('#urlbox').show();
     });
 }
