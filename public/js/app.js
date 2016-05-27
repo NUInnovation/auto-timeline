@@ -1,5 +1,7 @@
 var url;
 function createTimeline(query) {
+    $('.loader').show()
+    $("html,body").animate({ scrollTop: "60px"},200);
     $('.ex-wrapper').hide();
     $.get( "/create?query=" + query, function( res ) {
       data = res.data;
@@ -17,6 +19,7 @@ function createTimeline(query) {
         ga_property_id: "UA-27829802-4"
       });
 
+      $('.loader').hide()
       $('.ex-wrapper').hide();
       $("#timeline-header").html('');
       $('#timeline-header').show();
