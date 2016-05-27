@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div id="urlbox">
+<!--     <div id="urlbox">
       <div id="copy">
         Copy the URL here
       </div>
@@ -65,9 +65,24 @@
         Open in new tab
       </a>
     </div>
-    <div id="timeline-header"></div>
+    <div id="timeline-header"></div> -->
 
+<!--         <div id="urlbox">
 
+          <a target="_blank" id="openNew" style="background-color:rgb(255,191,0); font-family: Arial, Helvetica, sans-serif;">
+        Open in new tab
+      </a>
+
+      <input id="url" value="https:" readonly></input>
+
+      <div class="btn" data-clipboard-target="#url" style="background-color:rgb(255,191,0);height: 70%; width: 30%; font-family: Arial, Helvetica, sans-serif;">Copy the URL here
+          <!-- <img src="assets/clippy.svg" alt="Copy to clipboard"> -->
+<!--       </div>
+    </div>  -->
+
+    <div class="loader"></div>
+
+    <div id="timeline-header"></div> 
 
     <div id="timeline"></div>
 
@@ -116,9 +131,12 @@
 
         <script src="../js/timeline.js"></script>
         <script src="../js/app.js"></script>
+        <script src="https://cdn.rawgit.com/kimmobrunfeldt/progressbar.js/0.5.6/dist/progressbar.js"></script>
 
       </div>
     </div>
+
+
 
 
 <!-- facebook share plugin test
@@ -133,10 +151,12 @@
 -->
 
   <script type="text/javascript">
+  $('.loader').hide()
 
   var generate = function(){
     // $("#timeline-header").html('');
     // $('#timeline-header').show();
+
     var tag = $('#at-input').val();
     tag = tag.split("");
     if(tag[0] == '#'){

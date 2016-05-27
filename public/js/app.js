@@ -1,6 +1,9 @@
 var url;
 function createTimeline(query) {
+    $('.loader').show()
+    $("html,body").animate({ scrollTop: "60px"},200);
     $('.ex-wrapper').hide();
+    
     $.get( "/create?query=" + query, function( res ) {
       data = res.data;
       if(window.location.hostname == 'localhost'){
@@ -18,6 +21,7 @@ function createTimeline(query) {
       });
 
       $('.ex-wrapper').hide();
+      $('.loader').hide();
       $("#timeline-header").html('');
       $('#timeline-header').show();
       $("#timeline-header").append("<div id='t-header' >Timeline For <span>#" + query + "</span></div>");
