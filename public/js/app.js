@@ -1,5 +1,6 @@
 var url;
 function createTimeline(query) {
+    $('#spinner').show();
     $('.ex-wrapper').hide();
     $.get( "/create?query=" + query, function( res ) {
       data = res.data;
@@ -22,6 +23,8 @@ function createTimeline(query) {
       console.log('creating timeline');
 
       $('.ex-wrapper').hide();
+      $('#spinner').hide();
+      
       $("#timeline-header").html('');
       $('#timeline-header').show();
       $("#timeline-header").append("<div id='t-header' >Timeline For <span>#" + query + "</span></div>");

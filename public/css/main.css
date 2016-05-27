@@ -223,3 +223,10 @@ padding: 1px 0px;
   padding: 7px 20px;
   font-size: 1.2em;
 }
+
+#spinner {
+  display: none;
+  width: 200px;
+  margin: 0 auto;
+
+}
