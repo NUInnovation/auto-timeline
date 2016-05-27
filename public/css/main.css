@@ -1,19 +1,19 @@
 body{
-  font-family: 'EB Garamond', serif;
+  font-family: 'coda', serif;
   margin: 0px;
   color: #fff;
 }
 
 .at-wrapper{
-  height: 700px;
+  height: 640px;
   overflow: auto;
   background-image: url('img/bg.jpg');
   background-size: cover;
 }
 
 .at-back{
-  height: 700px;
-  background-color: rgba(0, 0, 0, 0.4);
+  height: 640px;
+  background-color: rgba(29, 29, 34, 0.75);
 }
 
 .at-header{
@@ -27,51 +27,76 @@ body{
 }
 
 .search-box{
-  font-family: 'Roboto', sans-serif;
-  width: 420px;
+  font-family: 'voces', sans-serif;
+  width: 450px;
   margin: 0 auto;
 }
 
 .search-box p{
+  letter-spacing: .2px;
   line-height: 1.8em;
   color: #fff;
   text-shadow: 0 2px 5px rgba(0,0,0,0.3);
   display: block;
-  font-size: 1.3em;
+  font-size: 1.25em;
   margin-bottom: 30px;
 }
 
 .input-field input[type=text]:focus {
      border-bottom: 1px solid rgba(255, 150, 0, 0.6) !important;
      box-shadow: 0 1px 0 0 rgba(255, 150, 0, 0.6) !important;
+     background-color: rgba(255, 150, 0, 0.6);
 }
 
-.inputset{
+.at-set{
+  overflow: auto;
+  width: 450px;
+  margin: 0 auto;
   display: table;
 }
 
-#at-input{
+#hash{
+  float: left;
+  font-size: 1.7em;
+  padding: .3%;
+  text-align: center;
+  border-radius: 3px 0px 0px 3px;
+  background-color: #FFBF00;
+  height: 44px;
+  width: 50px;
+}
 
-  color:#000;
+
+#input-set{
+  float: right;
+}
+
+
+#at-input{
+  float: left;
+  color:#fff;
   background-color: #fff;
   padding-left: 10px;
-  border-radius: 3px;
   box-shadow: none;
   outline: none;
   border: 2px #ddd solid;
-  width: 315px;
+  width: 300px;
   height: 40px;
   border-right: 0px;
   border-top-right-radius:0em;
   border-bottom-right-radius:0em;
 
+
 }
 
 #at-input:focus{
   border-color: #FFb000;
+  background-color: rgba(255, 150, 0, 0.3);
+
 }
 
 #at-btn{
+  position: absolute;
   font-size: 1em;
   border-radius: 3px;
   border: #FFBF00 1px solid;
@@ -169,6 +194,7 @@ body{
 #urlbox{
   overflow: auto;
   display: none;
+  font-family: 'Muli', sans-serif;
 }
 
 #copy{
@@ -179,7 +205,6 @@ body{
   padding: 10px 20px;
   font-size: 1.2em;
   color:#ffb000;
-  font-family: 'Roboto', sans-serif;
   font-weight: bold;
 }
 
@@ -189,7 +214,11 @@ padding: .5px 0px;
   border-color: #ffb000;
   letter-spacing: .5px;
   color:#333;
+<<<<<<< HEAD
   font-family: 'lora', sans-serif;
+=======
+  padding: 8px 20px;
+>>>>>>> master
   font-size: 1.2em;
   width: 60%;
   float: left;
@@ -197,13 +226,12 @@ padding: .5px 0px;
 }
 
 #openNew{
+  font-family: 'Muli', sans-serif;
   text-align: center;
   color: #fdfdfd;
   background-color: #333;
   width: 20%;
   float: left;
-  font-weight: bold;
-  font-family: 'Roboto', sans-serif;
   padding: 10px 20px;
   font-size: 1.2em;
 }
