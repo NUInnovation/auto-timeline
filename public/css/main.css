@@ -223,3 +223,8 @@ padding: 1px 0px;
   padding: 7px 20px;
   font-size: 1.2em;
 }
+
+#tl-link {
+  text-decoration: none;
+  color: #FFb000;
+}
