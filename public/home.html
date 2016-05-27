@@ -26,7 +26,6 @@
 
 
 
-
   </head>
 
   <body>
@@ -47,22 +46,20 @@
     </div>
 
     <div id="urlbox">
-          <a target="_blank" id="openNew" style="background-color:black; ">
+          <a class="btn" target="_blank" id="openNew" style="background-color:rgb(255,191,0); height: 47px; width: 255px;font-family: Arial, Helvetica, sans-serif;">
         Open in new tab
       </a>
 
+      <input id="url" value="https:" readonly></input>
 
-      <input id="url" value="https:">  </input>
-
-      <div class="btn" data-clipboard-target="#url" style="background-color:black; height: 47px; width: 256px">
-        Copy the URL here
+      <!-- Trigger -->
+      <div class="btn" data-clipboard-target="#url" style="background-color:rgb(255,191,0);height: 47px; width: 255px; font-family: Arial, Helvetica, sans-serif;">Copy the URL here
+          <!-- <img src="assets/clippy.svg" alt="Copy to clipboard"> -->
       </div>
-
     </div>
+
+
     <div id="timeline-header"></div>
-
-
-
     <div id="timeline"></div>
 
     <div class="ex-wrapper">
@@ -139,13 +136,13 @@
     // $('#timeline-header').show();
     var tag = $('#at-input').val();
     tag = tag.split("");
-    if(tag[0] == '#'){
+    // if(tag[0] == '#'){
+    //   tag = tag.join('');
+    //   tag = tag.substring(1);
+    // }
+    // else{
       tag = tag.join('');
-      tag = tag.substring(1);
-    }
-    else{
-      tag = tag.join('');
-    };
+    // };
 
     localStorage.setItem('hashtag', tag);
     temp = localStorage.getItem("hashtag");

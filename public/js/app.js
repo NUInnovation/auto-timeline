@@ -18,6 +18,8 @@ function createTimeline(query) {
         ga_property_id: "UA-27829802-4"
       });
 
+      console.log('creating timeline');
+
       $('.ex-wrapper').hide();
       $("#timeline-header").html('');
       $('#timeline-header').show();
