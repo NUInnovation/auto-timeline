@@ -178,14 +178,6 @@ body{
   float: left;
 }
 
-#openNew{
-  display: inline-block;
-  float: right;
-  font-family: 'Roboto', sans-serif;
-  font-size: .4em;
-  padding: 20px;
-  outline: inherit;
-}
 
 #openNew:hover{
   cursor:pointer;
@@ -198,27 +190,22 @@ body{
 }
 
 #copy{
+  border-radius: 0px;
+  box-shadow: none;
   text-align: center;
   background-color: #333;
   float: left;
   width: 20%;
-  padding: 10px 20px;
+  padding: 7px 20px;
   font-size: 1.2em;
-  color:#ffb000;
-  font-weight: bold;
 }
 
 #url{
-padding: .5px 0px;
+padding: 1px 0px;
   margin: 0px;
   border-color: #ffb000;
   letter-spacing: .5px;
   color:#333;
-<<<<<<< HEAD
-  font-family: 'lora', sans-serif;
-=======
-  padding: 8px 20px;
->>>>>>> master
   font-size: 1.2em;
   width: 60%;
   float: left;
@@ -232,6 +219,6 @@ padding: .5px 0px;
   background-color: #333;
   width: 20%;
   float: left;
-  padding: 10px 20px;
+  padding: 7px 20px;
   font-size: 1.2em;
 }
