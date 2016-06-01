@@ -33,6 +33,7 @@ function createTimeline(query) {
         $('#urlbox').show();
       }
       else {
+        $('#spinner').hide();
         $("#timeline-header").html('');
         $('#timeline-header').show();
         $("#timeline-header").append("<div id='t-header'> Sorry! There Are No Recent Posts for <span>#" + query + "</span></div>");
