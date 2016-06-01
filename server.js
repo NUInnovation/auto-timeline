@@ -67,8 +67,7 @@ function structureAndFilterTweets(tweets, filterFlag) {
       //Create a TL event for each media
       var tweetObject = {
         "media": {
-            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str,
-            "credit": "@" + tweet.user.screen_name
+            "url": "https://twitter.com/" + tweet.user.screen_name + "/status/" + tweet.id_str
           },
           "start_date": {
             "month": tweetDate.format("MM"),
@@ -78,10 +77,11 @@ function structureAndFilterTweets(tweets, filterFlag) {
             "minute": tweetDate.format("mm"),
             "second": tweetDate.format("ss")
           },
+
           "text": {
-            "headline": "",
-            "text": "<p>" + tweet.text + "</p>"
+            "headline": tweetDate.format("HH") + ":" + tweetDate.format("mm") + ":" + tweetDate.format("ss")
           }
+
       }
       tweetObjects.push(tweetObject);
     }

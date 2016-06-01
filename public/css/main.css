@@ -237,3 +237,7 @@ padding: 1px 0px;
 #spinner img{
   width: 150px;
 }
+
+.tl-timemarker-content-container:hover{
+    width: 100px !important;
+}
