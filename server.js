@@ -317,16 +317,28 @@ app.get('/create', function(req, res) {
 
   compileData(query, function(resultsJSON) {
     var currentDate = new Date();
-    save(currentDate, query, resultsJSON, function(id) {
-      console.log("ID Returned in Create: " + id);
+    console.log(resultsJSON.events.length)
+    if(resultsJSON.events.length > 0) {
+      save(currentDate, query, resultsJSON, function(id) {
+        console.log("ID Returned in Create: " + id);
+        var returnJSON = {
+          query: query,
+          id: id,
+          date: currentDate,
+          data: resultsJSON
+        };
+        res.send(returnJSON);
+      });
+    }
+    else {
       var returnJSON = {
         query: query,
-        id: id,
+        id: null,
         date: currentDate,
         data: resultsJSON
       };
-      res.send(returnJSON);
-    });
+     res.send(returnJSON);
+    }
   });
 });
 
