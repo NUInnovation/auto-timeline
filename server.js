@@ -197,7 +197,7 @@ function getInstagramData(query) {
 
       // if(result.length != 0) {
         //Only add media to the list if it is within the last week
-        if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
+        if (result && aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
           // console.log("Media is within a week old")
           // console.log(moment(result[0].created_time *1000).calendar())
           allMedia = allMedia.concat(result)
