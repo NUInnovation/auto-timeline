@@ -3,8 +3,7 @@ function createTimeline(query) {
     $('.ex-wrapper').hide();
     $.get( "/create?query=" + query, function( res ) {
       data = res.data;
-      console.log(data.length)
-      if(data.length > 0) {
+      if(data.events.length > 0) {
         if(window.location.hostname == 'localhost'){
           url = 'localhost:3000/timeline/' + res.id;
         }

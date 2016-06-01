@@ -107,7 +107,7 @@ function getTwitterData(query) {
         console.log("No 'popular' tweets returned by query: " + query)
         twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
           console.log("Total Tweets: " + allTweets.length);
-          if(allTweets > 0) {
+          if(allTweets.length > 0) {
             var finalList = twitterFilter.primaryFilter(allTweets);
           }
           else {
@@ -317,10 +317,10 @@ app.get('/create', function(req, res) {
 
   compileData(query, function(resultsJSON) {
     var currentDate = new Date();
-    console.log(resultsJSON.events.length)
     if(resultsJSON.events.length > 0) {
       save(currentDate, query, resultsJSON, function(id) {
         console.log("ID Returned in Create: " + id);
+        // console.log(JSON.stringify(resultsJSON))
         var returnJSON = {
           query: query,
           id: id,

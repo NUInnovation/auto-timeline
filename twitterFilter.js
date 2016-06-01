@@ -28,7 +28,6 @@ function primaryFilter(tweets) {
 	for (var sect in tweetsBySect){
 		//Select the tweets within the sect
 		var sectTweets = tweetsBySect[sect];
-
 		// Setup a hastable and list for heap
 		var hashtable = new HashTable();
 		var scoresList = []
