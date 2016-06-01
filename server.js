@@ -79,7 +79,7 @@ function structureAndFilterTweets(tweets, filterFlag) {
           },
 
           "text": {
-            "headline": tweetDate.format("HH") + ":" + tweetDate.format("mm") + ":" + tweetDate.format("ss")
+            "headline": "<p>" + tweet.text + "</p>"
           }
 
       }
