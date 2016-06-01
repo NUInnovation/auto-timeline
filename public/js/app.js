@@ -28,6 +28,7 @@ function createTimeline(query) {
         $("#timeline-header").html('');
         $('#timeline-header').show();
         $("#timeline-header").append("<div id='t-header' >Timeline For <span>#" + query + "</span></div>");
+        $('.tl-slidenav-title').remove();
         $('.tl-text-content-container').find("h2").remove();
         $("html,body").animate({ scrollTop: "640px"},1200);
         $('#urlbox').show();
