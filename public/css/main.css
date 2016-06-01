@@ -241,3 +241,10 @@ padding: 1px 0px;
 .tl-timemarker-content-container:hover{
     width: 100px !important;
 }
+
+.tl-text-content p{
+  color: #000;
+  font-size: 20px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+
+}

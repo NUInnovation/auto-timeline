@@ -173,7 +173,7 @@ function structureInstagramMedia(medias) {
           "second": instagramDate.format("ss")
         },
         "text": {
-          "headline": "",
+          "headline": instagramDate.format("HH") + ":" + instagramDate.format("mm") + ":" + instagramDate.format("ss"),
           "text": "<p>" + media.caption.text + "</p>"
         }
     }
