@@ -248,3 +248,9 @@ padding: 1px 0px;
   font-family: Georgia, 'Times New Roman', Times, serif;
 
 }
+
+#tl-link {
+  text-decoration: none;
+  color: #FFb000;
+}
+

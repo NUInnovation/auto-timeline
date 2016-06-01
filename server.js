@@ -107,7 +107,12 @@ function getTwitterData(query) {
         console.log("No 'popular' tweets returned by query: " + query)
         twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
           console.log("Total Tweets: " + allTweets.length);
-          var finalList = twitterFilter.primaryFilter(allTweets);
+          if(allTweets.length > 0) {
+            var finalList = twitterFilter.primaryFilter(allTweets);
+          }
+          else {
+            var finalList = []
+          }
           filterFlag = false;
           resolve(structureAndFilterTweets(finalList, filterFlag));
         });
@@ -197,7 +202,7 @@ function getInstagramData(query) {
 
       // if(result.length != 0) {
         //Only add media to the list if it is within the last week
-        if (aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
+        if (result && aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
           // console.log("Media is within a week old")
           // console.log(moment(result[0].created_time *1000).calendar())
           allMedia = allMedia.concat(result)
@@ -312,16 +317,28 @@ app.get('/create', function(req, res) {
 
   compileData(query, function(resultsJSON) {
     var currentDate = new Date();
-    save(currentDate, query, resultsJSON, function(id) {
-      console.log("ID Returned in Create: " + id);
+    if(resultsJSON.events.length > 0) {
+      save(currentDate, query, resultsJSON, function(id) {
+        console.log("ID Returned in Create: " + id);
+        // console.log(JSON.stringify(resultsJSON))
+        var returnJSON = {
+          query: query,
+          id: id,
+          date: currentDate,
+          data: resultsJSON
+        };
+        res.send(returnJSON);
+      });
+    }
+    else {
       var returnJSON = {
         query: query,
-        id: id,
+        id: null,
         date: currentDate,
         data: resultsJSON
       };
-      res.send(returnJSON);
-    });
+     res.send(returnJSON);
+    }
   });
 });
 
