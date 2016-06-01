@@ -35,12 +35,12 @@ body{
 
 .search-box p{
   letter-spacing: .2px;
-  line-height: 1.8em;
+  line-height: 1.9em;
   color: #fff;
   text-shadow: 0 2px 5px rgba(0,0,0,0.3);
   display: block;
-  font-size: 1.25em;
-  margin-bottom: 30px;
+  font-size: 1.3em;
+  margin-bottom:45px;
 }
 
 .input-field input[type=text]:focus {
@@ -59,7 +59,7 @@ body{
 #hash{
   float: left;
   font-size: 1.7em;
-  padding: .3%;
+  padding: 2px;
   text-align: center;
   border-radius: 3px 0px 0px 3px;
   background-color: #FFBF00;
@@ -69,6 +69,7 @@ body{
 
 
 #input-set{
+  overflow: auto;
   float: right;
 }
 
@@ -98,13 +99,13 @@ body{
 }
 
 #at-btn{
-  font-size: 1em;
+  font-size: 15px;
   border-radius: 3px;
   border: #FFBF00 1px solid;
   outline: none;
   color: #fff;
   padding: 10px 16px;
-  float: right;
+  float: left;
   background-color: #FFBF00;
   transition: background-color .5s, color .5s ease;
   border-top-left-radius:0em;
@@ -113,8 +114,8 @@ body{
 
 #at-btn:hover{
   color: #fff;
-  background-color: #FFb000;
-  border-color: #ffb000;
+  background-color: #FFD400;
+  border-color: #FFD400;
 }
 
 .ex-wrapper{
@@ -214,6 +215,9 @@ padding: 1px 0px;
 }
 
 #openNew{
+  border-radius: 0px;
+  height: 48px !important;
+  box-shadow: none;
   font-family: 'Muli', sans-serif;
   text-align: center;
   color: #fdfdfd;

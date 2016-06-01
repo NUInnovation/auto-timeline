@@ -56,7 +56,7 @@ function structureAndFilterTweets(tweets, filterFlag) {
     tweetObjects = []
     for (var i = 0; i < tweets.length; i++) {
       var tweet = tweets[i];
-      
+
       if (filterFlag) {
         if(!tweet.favorited) {
           continue;
@@ -98,7 +98,7 @@ function getTwitterData(query) {
     client.get('search/tweets', {q: query, count: 100, result_type: "popular", lang:"en"}, function(error, popularTweets, response){
       //Store an array of TL event for each media returned by IG
       if(error) {
-        console.log(error)  
+        console.log(error)
       }
 
       var filterFlag = false;
@@ -111,7 +111,7 @@ function getTwitterData(query) {
           filterFlag = false;
           resolve(structureAndFilterTweets(finalList, filterFlag));
         });
-      } 
+      }
       else {
         console.log("There were " + popularTweets.statuses.length + " 'popular' tweets returned by query: " + query)
         resolve(structureAndFilterTweets(popularTweets.statuses, filterFlag))
@@ -201,8 +201,8 @@ function getInstagramData(query) {
           // console.log("Media is within a week old")
           // console.log(moment(result[0].created_time *1000).calendar())
           allMedia = allMedia.concat(result)
-          if(pagination.next) {    
-            console.log(allMedia.length)    
+          if(pagination.next) {
+            console.log(allMedia.length)
             pagination.next(instagramPage); // Will get second page results
           }
           else {
@@ -227,7 +227,7 @@ function getInstagramData(query) {
         }
         else {
           console.log("Media is too old")
-          
+
           //Filter the array one last time to ensure that the media
           //is within the last week
           if(allMedia.length > 0) {
@@ -260,7 +260,7 @@ function getInstagramData(query) {
 function save(date, query, resultsJSON, callback) {
   console.log("Save function called")
 
-  var t = new Timeline({ 
+  var t = new Timeline({
     query: query,
     created: date,
     data: resultsJSON
@@ -329,7 +329,7 @@ app.get("/load/:id", function(req, res) {
   var id = req.params.id;
   console.log('Load endpoint hit for ID: ' + id)
   Timeline.findById(id, function(err, tl) {
-    if (err) { 
+    if (err) {
       console.log(err)
     } else if (tl) {
       res.send(tl.data);
