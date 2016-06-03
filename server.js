@@ -52,6 +52,8 @@ var client = new Twitter({
 //Instagram API Setup
 ig.use({ access_token: process.env.INSTAGRAM_ACCESS_TOKEN });
 
+//This function changes tweet objects into a format that
+//TimelineJS can understand.
 function structureAndFilterTweets(tweets, filterFlag) {
     tweetObjects = []
     for (var i = 0; i < tweets.length; i++) {
@@ -103,6 +105,7 @@ function getTwitterData(query) {
 
       var filterFlag = false;
 
+      //If too few popular tweets are returned, paginate through the API.
       if(popularTweets.statuses.length < 10) {
         console.log("No 'popular' tweets returned by query: " + query)
         twitterPage(query, "?q=%23" + query + "%20-RT&count=100", 0, [], function(allTweets) {
@@ -152,7 +155,8 @@ function twitterPage(query, page, callCount, storedTweets, callback) {
   });
 }
 
-
+//This function changes media objects into a format that
+//TimelineJS can understand.
 function structureInstagramMedia(medias) {
   //Store an array of TL event for each media returned by IG
   var mediaObjects = []
@@ -200,11 +204,8 @@ function getInstagramData(query) {
 
     var instagramPage = function(err, result, pagination, remaining, limit) {
 
-      // if(result.length != 0) {
         //Only add media to the list if it is within the last week
         if (result && aboutAWeekAgo.isBefore(moment(result[0].created_time *1000))) {
-          // console.log("Media is within a week old")
-          // console.log(moment(result[0].created_time *1000).calendar())
           allMedia = allMedia.concat(result)
           if(pagination.next) {
             console.log(allMedia.length)
@@ -262,6 +263,8 @@ function getInstagramData(query) {
 
 }
 
+//This funtion is used to save the Timeline into 
+//a MongoDB database
 function save(date, query, resultsJSON, callback) {
   console.log("Save function called")
 
@@ -299,10 +302,14 @@ function compileData(query, callback) {
   });
 }
 
+//Main route for the site
 app.get('/', function(req, res) {
   res.render('home.html');
 });
 
+
+//This route allows for people to view old Timelines
+//stored in the DB.
 app.get('/timeline/:id', function(req, res) {
   res.render('timeline-template.html');
 });
@@ -311,6 +318,7 @@ app.get('/test', function(req, res) {
   res.render('timeline-test.html');
 });
 
+//Created a Timeline and aggregares the data
 app.get('/create', function(req, res) {
   // This is the endpoint an AJAX call will hit to get data.
   var query = req.query.query;
@@ -342,6 +350,7 @@ app.get('/create', function(req, res) {
   });
 });
 
+//Loads a timeline from the database.
 app.get("/load/:id", function(req, res) {
   var id = req.params.id;
   console.log('Load endpoint hit for ID: ' + id)
@@ -361,6 +370,7 @@ app.use(function(req, res, next) {
     next(err);
 });
 
+//Starts listening on the port
 app.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
