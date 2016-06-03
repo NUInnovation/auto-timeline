@@ -66,7 +66,7 @@
       <input id="url" value="https:" readonly></input>
 
       <!-- Trigger -->
-      <div id='copy' class="btn" data-clipboard-target="#url" style="background-color:rgb(255,191,0);height: 48px; width: 20%; font-family: Arial, Helvetica, sans-serif;">Copy the URL
+      <div id='copy' class="btn" data-clipboard-target="#url" style="background-color:rgb(255,191,0);height: 48px; width: 20%; ">Copy the URL
           <!-- <img src="assets/clippy.svg" alt="Copy to clipboard"> -->
       </div>
     </div>
@@ -149,13 +149,13 @@
     // $('#timeline-header').show();
     var tag = $('#at-input').val();
     tag = tag.split("");
-    // if(tag[0] == '#'){
-    //   tag = tag.join('');
-    //   tag = tag.substring(1);
-    // }
-    // else{
+    if(tag[0] == '#'){
+       tag = tag.join('');
+       tag = tag.substring(1);
+     }
+     else{
       tag = tag.join('');
-    // };
+     };
 
     localStorage.setItem('hashtag', tag);
     temp = localStorage.getItem("hashtag");
