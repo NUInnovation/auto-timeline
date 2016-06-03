@@ -141,13 +141,15 @@ function dateFilter(medias) {
 
 }
 
+//Uniquify a list
 function unique(xs) {
   return xs.filter(function(x, i) {
     return xs.indexOf(x) === i
   })
 }
 
-
+//This function adds a point value (weight) to 
+//each piece of instagram media
 function evaluate(insta){
 	var weight = 0;
 
